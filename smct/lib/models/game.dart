@@ -24,6 +24,10 @@ class Game {
   final Mode mode;
   final Duration timer, delta_time;
 
+  String get timerToStr {
+    return "${this.timer.inMinutes.toString()}:${this.timer.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+  }
+
   const Game({
     this.left_value = 0,
     this.right_value = 0,

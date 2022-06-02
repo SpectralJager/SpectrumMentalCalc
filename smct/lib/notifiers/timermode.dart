@@ -17,10 +17,6 @@ class TimerNotifier extends StateNotifier<Game> {
     this.state = this.state.generateValues();
   }
 
-  String timerToStr() {
-    return "${this.state.timer.inMinutes.toString()}:${this.state.timer.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-  }
-
   void timerDec() {
     this.state =
         this.state.copyWith(timer: this.state.timer - Duration(seconds: 1));
