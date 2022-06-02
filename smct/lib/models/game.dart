@@ -73,12 +73,17 @@ class Game {
   }
 
   Game generateValues() {
-    return this.copyWith(
-      left_value:
-          Random().nextInt(this.left_max - this.left_min) + this.left_min,
-      right_value:
-          Random().nextInt(this.right_max - this.right_min) + this.right_min,
-    );
+    int left = Random().nextInt(this.left_max - this.left_min) + this.left_min;
+    int right =
+        Random().nextInt(this.right_max - this.right_min) + this.right_min;
+    if (this.mode == Mode.Division) {
+      left = Random().nextInt(this.left_max - this.left_min) + this.left_min;
+      while (left % right != 0) {
+        int right =
+            Random().nextInt(this.right_max - this.right_min) + this.right_min;
+      }
+    }
+    return this.copyWith(left_value: left, right_value: right);
   }
 
   Game incrementPoints() {
@@ -118,7 +123,7 @@ class Game {
   }
 
   Game changeLvl() {
-    return Game(lvl: this.lvl + 1);
+    return this.copyWith(lvl: this.lvl + 1);
   }
 
   int get result {

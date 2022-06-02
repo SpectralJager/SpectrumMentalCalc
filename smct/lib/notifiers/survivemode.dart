@@ -12,6 +12,15 @@ class SurviveNotifier extends StateNotifier<Game> {
 
   void submitAnswer(int answer) {
     if (this.state.result == answer) {
-    } else {}
+      this.state = this.state.incrementPoints();
+      if (this.state.points / 20 == this.state.lvl) {
+        this.state = this.state.changeLvl();
+        this.state = this.state.changeMinMax();
+      }
+    } else {
+      this.state = this.state.decrementPoints();
+      this.healthDec();
+    }
+    this.state = this.state.generateValues();
   }
 }
