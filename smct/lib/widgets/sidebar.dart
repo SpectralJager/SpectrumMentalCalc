@@ -12,22 +12,28 @@ class SideBar extends ConsumerWidget {
       padding: EdgeInsets.only(top: 80),
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width * .15,
-      color: Colors.grey,
+      color: Theme.of(context).colorScheme.secondary,
       child: Column(
         children: [
           SideBarItem(
             icon: Icons.home,
-            iconColor: current_page == 0 ? Colors.white : Colors.black,
+            iconColor: current_page == 0
+                ? Colors.white
+                : Theme.of(context).colorScheme.onSecondary,
             index: 0,
           ),
           SideBarItem(
             icon: Icons.leaderboard,
-            iconColor: current_page == 1 ? Colors.white : Colors.black,
+            iconColor: current_page == 1
+                ? Colors.white
+                : Theme.of(context).colorScheme.onSecondary,
             index: 1,
           ),
           SideBarItem(
             icon: Icons.library_books,
-            iconColor: current_page == 2 ? Colors.white : Colors.black,
+            iconColor: current_page == 2
+                ? Colors.white
+                : Theme.of(context).colorScheme.onSecondary,
             index: 2,
           ),
           Expanded(
@@ -36,7 +42,9 @@ class SideBar extends ConsumerWidget {
           )),
           SideBarItem(
             icon: Icons.people,
-            iconColor: current_page == 3 ? Colors.white : Colors.black,
+            iconColor: current_page == 3
+                ? Colors.white
+                : Theme.of(context).colorScheme.onSecondary,
             index: 3,
           ),
         ],

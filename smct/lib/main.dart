@@ -45,14 +45,17 @@ class MentalCalc extends StatelessWidget {
           errorContainer: Color(0xff930006),
           onErrorContainer: Color(0xffFFDAD4),
           // Background
-          background: Color(0xff201A17),
-          onBackground: Color(0xffECE0DA),
-          surface: Color(0xff201A17),
-          onSurface: Color(0xffECE0DA),
+          background: Color(0xffECE0DA),
+          onBackground: Color(0xff201A17),
+          surface: Color(0xffECE0DA),
+          onSurface: Color(0xff201A17),
         ),
         useMaterial3: true,
         textTheme: TextTheme(
-          headline1: GoogleFonts.oswald(),
+          displaySmall: GoogleFonts.oswald(
+            fontSize: 36,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
     );

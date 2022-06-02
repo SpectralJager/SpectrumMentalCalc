@@ -29,6 +29,7 @@ class _HubViewState extends ConsumerState<HubView> {
   Widget build(BuildContext context) {
     final current_page = ref.watch(hub_page_index);
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
