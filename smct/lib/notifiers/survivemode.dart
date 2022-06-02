@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smct/models/game.dart';
 
 class SurviveNotifier extends StateNotifier<Game> {
-  SurviveNotifier(Game? sm) : super(sm ?? Game());
+  SurviveNotifier(Game sm) : super(sm);
 
   void healthDec() {
     if (this.state.health > 0) {

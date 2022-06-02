@@ -21,8 +21,8 @@ class Game {
       delta_point,
       health,
       lvl;
-  final String timer, delta_time;
   final Mode mode;
+  final Duration timer, delta_time;
 
   const Game({
     this.left_value = 0,
@@ -34,8 +34,8 @@ class Game {
     this.points = 0,
     this.delta_point = 0,
     this.health = 0,
-    this.timer = "00:00",
-    this.delta_time = "00:00",
+    this.timer = const Duration(seconds: 0),
+    this.delta_time = const Duration(seconds: 0),
     this.mode = Mode.Summation,
     this.lvl = 0,
   });
@@ -51,8 +51,8 @@ class Game {
     int? delta_point,
     int? health,
     int? lvl,
-    String? timer,
-    String? delta_time,
+    Duration? timer,
+    Duration? delta_time,
     Mode? mode,
   }) {
     return Game(
@@ -127,7 +127,7 @@ class Game {
   }
 
   int get result {
-    var temp;
+    int temp;
     switch (this.mode) {
       case Mode.Summation:
         temp = this.left_value + this.right_value;
@@ -136,7 +136,7 @@ class Game {
         temp = this.left_value - this.right_value;
         break;
       case Mode.Division:
-        temp = this.left_value / this.right_value;
+        temp = (this.left_value / this.right_value) as int;
         break;
       case Mode.Multiplication:
         temp = this.left_value * this.right_value;

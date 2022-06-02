@@ -1,21 +1,38 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smct/models/game.dart';
 
-class EnduranceMode {
-  final String timer;
-  final String delta_time;
-  final Game game;
+class EnduranceNotifier extends StateNotifier<Game> {
+  EnduranceNotifier(Game game) : super(game);
 
-  EnduranceMode({
-    this.timer = "00:00",
-    this.delta_time = "00:00",
-    this.game = const Game(),
-  });
+  void submitAnswer(int answer) {
+    if (this.state.result == answer) {
+      this.state = this.state.incrementPoints();
+      this.timerInc();
+      if (this.state.points / 20 == this.state.lvl) {
+        this.state = this.state.changeLvl();
+        this.state = this.state.changeMinMax();
+      }
+    } else {
+      this.state = this.state.decrementPoints();
+    }
+    this.state = this.state.generateValues();
+  }
 
-  EnduranceMode copyFrom({String? timer, String? delta_time, Game? game}) {
-    return EnduranceMode(
-      timer: timer ?? this.timer,
-      delta_time: delta_time ?? this.delta_time,
-      game: game ?? this.game,
-    );
+  String timerToStr() {
+    return "${this.state.timer.inMinutes.toString()}:${this.state.timer.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+  }
+
+  void timerInc() {
+    this.state =
+        this.state.copyWith(timer: this.state.timer + this.state.delta_time);
+  }
+
+  void timerDec() {
+    this.state =
+        this.state.copyWith(timer: this.state.timer - Duration(seconds: 1));
+  }
+
+  void changeDeltaTime(Duration new_delta) {
+    this.state = this.state.copyWith(delta_time: new_delta);
   }
 }

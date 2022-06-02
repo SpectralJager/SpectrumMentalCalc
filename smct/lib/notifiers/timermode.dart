@@ -1,18 +1,28 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smct/models/game.dart';
 
-class TimerMode {
-  final String timer;
-  final Game game;
+class TimerNotifier extends StateNotifier<Game> {
+  TimerNotifier(Game game) : super(game);
 
-  const TimerMode({
-    this.timer = "00:00:00",
-    this.game = const Game(),
-  });
+  void submitAnswer(int answer) {
+    if (this.state.result == answer) {
+      this.state = this.state.incrementPoints();
+      if (this.state.points / 20 == this.state.lvl) {
+        this.state = this.state.changeLvl();
+        this.state = this.state.changeMinMax();
+      }
+    } else {
+      this.state = this.state.decrementPoints();
+    }
+    this.state = this.state.generateValues();
+  }
 
-  TimerMode copyFrom(String? timer, Game? game) {
-    return TimerMode(
-      timer: timer ?? this.timer,
-      game: game ?? this.game,
-    );
+  String timerToStr() {
+    return "${this.state.timer.inMinutes.toString()}:${this.state.timer.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+  }
+
+  void timerDec() {
+    this.state =
+        this.state.copyWith(timer: this.state.timer - Duration(seconds: 1));
   }
 }
