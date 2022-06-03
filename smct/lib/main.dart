@@ -1,12 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smct/models/game.dart';
-import 'package:smct/notifiers/survivemode.dart';
-import 'package:smct/notifiers/timermode.dart';
 import 'package:smct/views/hubview.dart';
 
 void main() {
@@ -28,7 +22,7 @@ class MentalCalc extends StatelessWidget {
           primary: Color(0xffFFB77E),
           onPrimary: Color(0xff4F2500),
           primaryContainer: Color(0xff703800),
-          onPrimaryContainer: Color(0xff),
+          onPrimaryContainer: Color(0xffFFDCC2),
           // Secondary
           secondary: Color(0xffE3BFA6),
           onSecondary: Color(0xff422B1A),
@@ -52,11 +46,18 @@ class MentalCalc extends StatelessWidget {
         ),
         useMaterial3: true,
         textTheme: TextTheme(
-          displaySmall: GoogleFonts.oswald(
-            fontSize: 36,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+            displaySmall: GoogleFonts.oswald(
+              fontSize: 36,
+              fontWeight: FontWeight.w400,
+            ),
+            headlineMedium: GoogleFonts.oswald(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+            ),
+            labelLarge: GoogleFonts.openSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            )),
       ),
     );
   }

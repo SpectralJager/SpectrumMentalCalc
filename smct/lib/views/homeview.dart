@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:smct/models/game.dart';
+import 'package:smct/widgets/modecard.dart';
+import 'package:smct/widgets/playbtn.dart';
+import 'package:smct/widgets/questionbtn.dart';
 import 'package:smct/widgets/tabindicator.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -32,7 +37,7 @@ class _HomeViewState extends ConsumerState<HomeView>
             Text(
               "Offline modes",
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: Color(0xff201A17),
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
             ),
             Container(
@@ -65,19 +70,17 @@ class _HomeViewState extends ConsumerState<HomeView>
               width: MediaQuery.of(context).size.width - 20,
               height: 300,
               child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 10, left: 5),
-                      height: 260,
-                      width: 220,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    );
-                  },
-                  itemCount: Mode.values.length),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return ModeCard(
+                    mode: Mode.values[index],
+                    mode_anim: "assets/anim/plus.json",
+                    lvl: 8,
+                    points: 30000,
+                  );
+                },
+                itemCount: Mode.values.length,
+              ),
             )
           ],
         ),
