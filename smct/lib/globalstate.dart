@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smct/models/game.dart';
-import 'package:smct/notifiers/gamenotifier.dart';
+import 'package:smct/notifiers/survivenotifier.dart';
 
 final hub_page_index = StateProvider<int>(
   (ref) => 0,

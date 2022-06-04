@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:smct/models/scope.dart';
 
 enum Mode {
   Summation,
@@ -11,68 +12,111 @@ enum Mode {
 
 @immutable
 class Game {
-  final int left_value,
-      right_value,
-      left_max,
-      left_min,
-      right_max,
-      right_min,
-      points,
-      delta_point,
-      health,
-      lvl;
+  final int left_value, right_value, points, delta_point, lvl, health;
+  final Scope left_scope, right_scope;
   final Mode mode;
-  final Duration timer, delta_time;
-
-  String get timerToStr {
-    return "${this.timer.inMinutes.toString()}:${this.timer.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-  }
 
   const Game({
     this.left_value = 0,
     this.right_value = 0,
-    this.left_max = 0,
-    this.left_min = 0,
-    this.right_max = 0,
-    this.right_min = 0,
+    this.left_scope = const Scope(10, 1),
+    this.right_scope = const Scope(10, 1),
     this.points = 0,
     this.delta_point = 0,
-    this.health = 0,
-    this.timer = const Duration(seconds: 0),
-    this.delta_time = const Duration(seconds: 0),
-    this.mode = Mode.Summation,
     this.lvl = 0,
+    this.mode = Mode.Summation,
+    this.health = 0,
   });
 
   Game copyWith({
     int? left_value,
     int? right_value,
-    int? left_max,
-    int? left_min,
-    int? right_max,
-    int? right_min,
+    Scope? left_scope,
+    Scope? right_scope,
     int? points,
     int? delta_point,
-    int? health,
     int? lvl,
-    Duration? timer,
-    Duration? delta_time,
     Mode? mode,
+    int? health,
   }) {
     return Game(
       left_value: left_value ?? this.left_value,
       right_value: right_value ?? this.right_value,
-      left_max: left_max ?? this.left_max,
-      left_min: left_min ?? this.left_min,
-      right_max: right_max ?? this.right_max,
-      right_min: right_min ?? this.right_min,
+      left_scope: left_scope ?? this.left_scope,
+      right_scope: right_scope ?? this.right_scope,
       points: points ?? this.points,
       delta_point: delta_point ?? this.delta_point,
-      health: health ?? this.health,
       lvl: lvl ?? this.lvl,
-      timer: timer ?? this.timer,
-      delta_time: delta_time ?? this.delta_time,
       mode: mode ?? this.mode,
+      health: health ?? this.health,
     );
+  }
+
+  Game generateValues() {
+    int left = Random().nextInt(this.left_scope.max - this.left_scope.min) +
+        this.left_scope.min;
+    int right = Random().nextInt(this.right_scope.max - this.right_scope.min) +
+        this.right_scope.min;
+    if (this.mode == Mode.Division) {
+      int left = Random().nextInt(this.left_scope.max - this.left_scope.min) +
+          this.left_scope.min;
+      while (left % right != 0) {
+        int right =
+            Random().nextInt(this.right_scope.max - this.right_scope.min) +
+                this.right_scope.min;
+      }
+    }
+    return this.copyWith(left_value: left, right_value: right);
+  }
+
+  Game incrementPoints() {
+    return this.copyWith(
+      points: this.points + this.delta_point,
+    );
+  }
+
+  Game decrementPoints() {
+    return this.copyWith(
+      points: this.points - this.delta_point,
+    );
+  }
+
+  Game changeMinMax() {
+    Scope? left, right;
+    switch (this.lvl % 2) {
+      case 0:
+        left = Scope(this.left_scope.max * 10, this.left_scope.max);
+        break;
+      case 1:
+        right = Scope(this.right_scope.max * 10, this.right_scope.max);
+        break;
+    }
+    return this.copyWith(
+      left_scope: left ?? this.left_scope,
+      right_scope: right ?? this.right_scope,
+    );
+  }
+
+  Game changeLvl() {
+    return this.copyWith(lvl: this.lvl + 1);
+  }
+
+  int get result {
+    int temp;
+    switch (this.mode) {
+      case Mode.Summation:
+        temp = this.left_value + this.right_value;
+        break;
+      case Mode.Subtraction:
+        temp = this.left_value - this.right_value;
+        break;
+      case Mode.Division:
+        temp = (this.left_value / this.right_value) as int;
+        break;
+      case Mode.Multiplication:
+        temp = this.left_value * this.right_value;
+        break;
+    }
+    return temp;
   }
 }
