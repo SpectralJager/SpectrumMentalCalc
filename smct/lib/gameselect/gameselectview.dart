@@ -1,23 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:lottie/lottie.dart';
-import 'package:smct/models/game.dart';
-import 'package:smct/widgets/modecard.dart';
-import 'package:smct/widgets/playbtn.dart';
-import 'package:smct/widgets/questionbtn.dart';
-import 'package:smct/widgets/tabindicator.dart';
+part of 'gameselect.dart';
 
-class HomeView extends ConsumerStatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+class GameSelectView extends StatefulWidget {
+  const GameSelectView({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomeViewState();
+  State<StatefulWidget> createState() => _GameSelectViewState();
 }
 
-class _HomeViewState extends ConsumerState<HomeView>
+class _GameSelectViewState extends State<GameSelectView>
     with SingleTickerProviderStateMixin {
   late TabController _tab_controller;
+  final animations_list = [
+    "assets/anim/plus.json",
+    "assets/anim/minus.json",
+    "assets/anim/plus.json",
+    "assets/anim/div.json",
+  ];
   @override
   void initState() {
     super.initState();
@@ -46,7 +44,12 @@ class _HomeViewState extends ConsumerState<HomeView>
                 alignment: Alignment.centerLeft,
                 child: TabBar(
                   isScrollable: true,
-                  controller: this._tab_controller,
+                  controller: this._tab_controller
+                    ..addListener(() {
+                      context
+                          .read<GameSelectBloc>()
+                          .changeType(this._tab_controller.index);
+                    }),
                   indicator: DotIndicator(
                     color: Theme.of(context).colorScheme.primary,
                     distanceFromCenter: 20,
@@ -74,7 +77,7 @@ class _HomeViewState extends ConsumerState<HomeView>
                 itemBuilder: (context, index) {
                   return ModeCard(
                     mode: Mode.values[index],
-                    mode_anim: "assets/anim/plus.json",
+                    mode_anim: this.animations_list[index],
                     lvl: 8,
                     points: 30000,
                   );

@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smct/globalstate.dart';
+part of 'widgets.dart';
 
-class SideBar extends ConsumerWidget {
+class SideBar extends StatelessWidget {
   const SideBar({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final current_page = ref.watch(hub_page_index);
+  Widget build(BuildContext context) {
+    final int current_page =
+        context.select((HomeBloc bloc) => bloc.state.current_view);
     return Container(
       padding: EdgeInsets.only(top: 80),
       height: MediaQuery.of(context).size.height,
@@ -53,7 +52,7 @@ class SideBar extends ConsumerWidget {
   }
 }
 
-class SideBarItem extends ConsumerWidget {
+class SideBarItem extends StatelessWidget {
   const SideBarItem({
     Key? key,
     required this.index,
@@ -66,11 +65,13 @@ class SideBarItem extends ConsumerWidget {
   final IconData icon;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       child: IconButton(
-        onPressed: () => ref.read(hub_page_index.notifier).state = index,
+        onPressed: () {
+          context.read<HomeBloc>().add(HomeChangeView(view_id: index));
+        },
         icon: Icon(
           icon,
           color: iconColor,

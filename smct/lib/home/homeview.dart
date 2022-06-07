@@ -1,19 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smct/globalstate.dart';
-import 'package:smct/views/homeview.dart';
-import 'package:smct/widgets/sidebar.dart';
+part of 'home.dart';
 
-class HubView extends ConsumerStatefulWidget {
-  const HubView({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HubViewState();
-}
-
-class _HubViewState extends ConsumerState<HubView> {
+class HomeView extends StatelessWidget {
+  HomeView({Key? key}) : super(key: key);
   final hub_pages = [
-    HomeView(),
+    GameSelectView(),
     Center(
       child: Text('leaderboard'),
     ),
@@ -27,7 +17,6 @@ class _HubViewState extends ConsumerState<HubView> {
 
   @override
   Widget build(BuildContext context) {
-    final current_page = ref.watch(hub_page_index);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
@@ -39,8 +28,11 @@ class _HubViewState extends ConsumerState<HubView> {
             SizedBox(
               width: MediaQuery.of(context).size.width * .85,
               height: MediaQuery.of(context).size.height,
-              child: hub_pages[current_page],
-            )
+              child:
+                  BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+                return this.hub_pages[state.current_view];
+              }),
+            ),
           ]),
         ),
       ),

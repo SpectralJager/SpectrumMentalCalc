@@ -1,31 +1,20 @@
-import 'dart:math';
+part of 'game.dart';
 
-import 'package:flutter/foundation.dart';
-import 'package:smct/models/scope.dart';
-
-enum Mode {
-  Summation,
-  Subtraction,
-  Multiplication,
-  Division,
-}
-
-@immutable
 class Game {
   final int left_value, right_value, points, delta_point, lvl, health;
   final Scope left_scope, right_scope;
   final Mode mode;
 
   const Game({
-    this.left_value = 0,
-    this.right_value = 0,
+    this.left_value = 1,
+    this.right_value = 1,
     this.left_scope = const Scope(10, 1),
     this.right_scope = const Scope(10, 1),
     this.points = 0,
-    this.delta_point = 0,
-    this.lvl = 0,
+    this.delta_point = 1,
+    this.lvl = 1,
     this.mode = Mode.Summation,
-    this.health = 0,
+    this.health = 3,
   });
 
   Game copyWith({
@@ -57,13 +46,21 @@ class Game {
         this.left_scope.min;
     int right = Random().nextInt(this.right_scope.max - this.right_scope.min) +
         this.right_scope.min;
-    if (this.mode == Mode.Division) {
-      int left = Random().nextInt(this.left_scope.max - this.left_scope.min) +
-          this.left_scope.min;
-      while (left % right != 0) {
-        int right =
-            Random().nextInt(this.right_scope.max - this.right_scope.min) +
-                this.right_scope.min;
+    if (mode == Mode.Division) {
+      while (left % right != 0 || right == 1 || right == left) {
+        left = Random().nextInt(this.left_scope.max - this.left_scope.min) +
+            this.left_scope.min;
+        right = Random().nextInt(this.right_scope.max - this.right_scope.min) +
+            this.right_scope.min;
+        print('$left $right');
+      }
+    } else if (mode == Mode.Subtraction) {
+      while (left < right) {
+        left = Random().nextInt(this.left_scope.max - this.left_scope.min) +
+            this.left_scope.min;
+        right = Random().nextInt(this.right_scope.max - this.right_scope.min) +
+            this.right_scope.min;
+        print('$left $right');
       }
     }
     return this.copyWith(left_value: left, right_value: right);
@@ -78,6 +75,12 @@ class Game {
   Game decrementPoints() {
     return this.copyWith(
       points: this.points - this.delta_point,
+    );
+  }
+
+  Game decrementHealth() {
+    return this.copyWith(
+      health: this.health - 1,
     );
   }
 
@@ -111,12 +114,22 @@ class Game {
         temp = this.left_value - this.right_value;
         break;
       case Mode.Division:
-        temp = (this.left_value / this.right_value) as int;
+        temp = (this.left_value / this.right_value).round();
         break;
       case Mode.Multiplication:
-        temp = this.left_value * this.right_value;
+        temp = (this.left_value * this.right_value).round();
         break;
     }
     return temp;
+  }
+}
+
+class Scope {
+  final int max, min;
+
+  const Scope(this.max, this.min);
+
+  Scope copyWith({int? max, int? min}) {
+    return Scope(max ?? this.max, min ?? this.min);
   }
 }

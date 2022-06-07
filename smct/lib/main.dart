@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smct/views/hubview.dart';
+import 'package:smct/gameselect/gameselect.dart';
+import 'package:smct/home/home.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MentalCalc()));
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider<HomeBloc>(create: (_) => HomeBloc()),
+    BlocProvider<GameSelectBloc>(create: (_) => GameSelectBloc()),
+  ], child: const MentalCalc()));
 }
 
 class MentalCalc extends StatelessWidget {
@@ -14,7 +18,7 @@ class MentalCalc extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HubView(),
+      home: HomeView(),
       theme: ThemeData.from(
         colorScheme: const ColorScheme(
           brightness: Brightness.dark,

@@ -1,13 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
-import 'package:smct/globalstate.dart';
-import 'package:smct/models/game.dart';
-import 'package:smct/views/gameview.dart';
-import 'package:smct/widgets/playbtn.dart';
-import 'package:smct/widgets/questionbtn.dart';
+part of 'widgets.dart';
 
-class ModeCard extends ConsumerWidget {
+class ModeCard extends StatelessWidget {
   final int points;
   final int lvl;
   final String mode_anim;
@@ -22,7 +15,7 @@ class ModeCard extends ConsumerWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: 10, left: 5, bottom: 10),
       height: 260,
@@ -98,12 +91,11 @@ class ModeCard extends ConsumerWidget {
           ),
           PlayBtn(
             on_tap: () {
-              ref.read(offline_game_mode.notifier).state = mode;
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return GameView();
+                    return GamePage(mode: mode);
                   },
                 ),
               );
