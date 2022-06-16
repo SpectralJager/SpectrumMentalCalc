@@ -1,4 +1,7 @@
-part of 'home.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smct/home/home.dart';
+import 'package:smct/page/widgets/widgets.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({Key? key}) : super(key: key);
@@ -38,4 +41,6 @@ class HomeView extends StatelessWidget {
       ),
     );
   }
+
+  static GameSelectView() {}
 }

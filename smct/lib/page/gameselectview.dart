@@ -1,4 +1,8 @@
-part of 'gameselect.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smct/game/game.dart';
+import 'package:smct/gameselect/gameselect.dart';
+import 'package:smct/page/widgets/widgets.dart';
 
 class GameSelectView extends StatefulWidget {
   const GameSelectView({Key? key}) : super(key: key);

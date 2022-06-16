@@ -1,4 +1,20 @@
-part of 'game.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smct/game/game.dart';
+import 'package:smct/gameselect/gameselect.dart';
+
+class GamePage extends StatelessWidget {
+  const GamePage({Key? key, required this.mode}) : super(key: key);
+  final Mode mode;
+  @override
+  Widget build(BuildContext context) {
+    var type = context.read<GameSelectBloc>().state.type;
+    return BlocProvider(
+      create: (_) => GameBloc(Game(mode: mode)),
+      child: GameView(),
+    );
+  }
+}
 
 class GameView extends StatelessWidget {
   GameView({Key? key}) : super(key: key);
