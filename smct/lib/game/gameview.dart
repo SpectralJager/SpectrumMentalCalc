@@ -139,13 +139,18 @@ class GameView extends StatelessWidget {
                       text: i,
                     ),
                   ElevatedButton(
-                      onPressed: () {
-                        this.txt_edit_controller.clear();
-                      },
-                      child: Icon(
-                        Icons.clear,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      )),
+                    onPressed: () {
+                      this.txt_edit_controller.clear();
+                    },
+                    child: Icon(
+                      Icons.clear,
+                      color: Theme.of(context).colorScheme.onError,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      onPrimary: Colors.white,
+                      primary: Colors.redAccent,
+                    ),
+                  ),
                   ElevatedButton(
                       onPressed: () {
                         this.txt_edit_controller.text += '0';
@@ -155,18 +160,21 @@ class GameView extends StatelessWidget {
                         style: buttons_text_style,
                       )),
                   ElevatedButton(
-                    onPressed: () {
-                      if (this.txt_edit_controller.text != '') {
-                        context.read<GameBloc>().add(GameEventSubmit(
-                            int.parse(this.txt_edit_controller.text)));
-                        this.txt_edit_controller.clear();
-                      }
-                    },
-                    child: Icon(
-                      Icons.clear,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
+                      onPressed: () {
+                        if (this.txt_edit_controller.text != '') {
+                          context.read<GameBloc>().add(GameEventSubmit(
+                              int.parse(this.txt_edit_controller.text)));
+                          this.txt_edit_controller.clear();
+                        }
+                      },
+                      child: Icon(
+                        Icons.check,
+                        color: Theme.of(context).colorScheme.onTertiary,
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        onPrimary: Colors.white,
+                        primary: Colors.greenAccent,
+                      )),
                 ],
               ),
             ),
