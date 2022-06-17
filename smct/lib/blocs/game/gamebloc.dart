@@ -2,6 +2,7 @@ part of 'game.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   late final Game _game;
+
   GameBloc(Game game) : super(GameStateInit(game)) {
     this._game = game;
     on<GameEventStart>(_onStart);

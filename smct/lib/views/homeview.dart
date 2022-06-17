@@ -1,19 +1,22 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smct/blocs/home/home.dart';
+import 'package:smct/views/gameselectview.dart';
 import 'package:smct/views/widgets/widgets.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({Key? key}) : super(key: key);
   final hub_pages = [
-    GameSelectView(),
-    Center(
+    const GameSelectView(),
+    const Center(
       child: Text('leaderboard'),
     ),
-    Center(
+    const Center(
       child: Text('tutorials'),
     ),
-    Center(
+    const Center(
       child: Text('Profile'),
     ),
   ];
@@ -23,24 +26,23 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Row(children: [
-            SideBar(),
+            const SideBar(),
             SizedBox(
               width: MediaQuery.of(context).size.width * .85,
               height: MediaQuery.of(context).size.height,
-              child:
-                  BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-                return this.hub_pages[state.current_view];
-              }),
+              child: BlocBuilder<HomeBloc, HomeState>(
+                builder: (context, state) {
+                  return this.hub_pages[state.current_view];
+                },
+              ),
             ),
           ]),
         ),
       ),
     );
   }
-
-  static GameSelectView() {}
 }

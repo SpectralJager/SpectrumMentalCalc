@@ -1,4 +1,8 @@
-part of 'game.dart';
+// ignore_for_file: non_constant_identifier_names, unnecessary_this
+
+import 'dart:math';
+
+import 'package:smct/blocs/game/game.dart';
 
 class Game {
   final int left_value, right_value, points, delta_point, lvl, health;
@@ -8,7 +12,7 @@ class Game {
   const Game({
     this.left_value = 1,
     this.right_value = 1,
-    this.left_scope = const Scope(10, 1),
+    this.left_scope = const Scope(100, 10),
     this.right_scope = const Scope(10, 1),
     this.points = 0,
     this.delta_point = 1,
@@ -52,7 +56,7 @@ class Game {
             this.left_scope.min;
         right = Random().nextInt(this.right_scope.max - this.right_scope.min) +
             this.right_scope.min;
-        print('$left $right');
+        // print('$left $right');
       }
     } else if (mode == Mode.Subtraction) {
       while (left < right) {
@@ -60,7 +64,7 @@ class Game {
             this.left_scope.min;
         right = Random().nextInt(this.right_scope.max - this.right_scope.min) +
             this.right_scope.min;
-        print('$left $right');
+        // print('$left $right');
       }
     }
     return this.copyWith(left_value: left, right_value: right);
