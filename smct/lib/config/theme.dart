@@ -32,17 +32,80 @@ final theme = ThemeData.from(
     onSurface: Color(0xff201A17),
   ),
   textTheme: TextTheme(
+    displayLarge: GoogleFonts.oswald(
+      // height: 64,
+      fontSize: 57,
+      fontWeight: FontWeight.w400,
+    ),
+    displayMedium: GoogleFonts.oswald(
+      // height: 52,
+      fontSize: 45,
+      fontWeight: FontWeight.w400,
+    ),
     displaySmall: GoogleFonts.oswald(
+      // height: 44,
       fontSize: 36,
       fontWeight: FontWeight.w400,
     ),
+    headlineLarge: GoogleFonts.oswald(
+      // height: 40,
+      fontSize: 32,
+      fontWeight: FontWeight.w400,
+    ),
     headlineMedium: GoogleFonts.oswald(
+      // height: 36,
       fontSize: 28,
       fontWeight: FontWeight.w400,
     ),
-    labelLarge: GoogleFonts.openSans(
+    headlineSmall: GoogleFonts.oswald(
+      // height: 32,
+      fontSize: 24,
+      fontWeight: FontWeight.w400,
+    ),
+    titleLarge: GoogleFonts.openSans(
+      // height: 28,
+      fontSize: 22,
+      fontWeight: FontWeight.w400,
+    ),
+    titleMedium: GoogleFonts.openSans(
+      // height: 24,
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+    ),
+    titleSmall: GoogleFonts.openSans(
+      // height: 20,
       fontSize: 14,
       fontWeight: FontWeight.w500,
+    ),
+    labelLarge: GoogleFonts.openSans(
+      // height: 20,
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+    ),
+    labelMedium: GoogleFonts.openSans(
+      // height: 16,
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+    ),
+    labelSmall: GoogleFonts.openSans(
+      // height: 16,
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+    ),
+    bodyLarge: GoogleFonts.openSans(
+      // height: 24,
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+    ),
+    bodyMedium: GoogleFonts.openSans(
+      // height: 20,
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+    ),
+    bodySmall: GoogleFonts.openSans(
+      // height: 16,
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
     ),
   ),
 );

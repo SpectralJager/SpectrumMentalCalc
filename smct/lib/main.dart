@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smct/config/theme.dart';
+import 'package:smct/screens/home_screen/home_screen.dart';
 
 void main() {
-  runApp(MultiBlocProvider(providers: [], child: const MentalCalc()));
+  runApp(const MentalCalc());
 }
 
 class MentalCalc extends StatelessWidget {
@@ -14,6 +15,7 @@ class MentalCalc extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme,
+      home: HomeScreen(),
     );
   }
 }
