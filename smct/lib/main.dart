@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smct/config/theme.dart';
 import 'package:smct/screens/home_screen/home_screen.dart';
 

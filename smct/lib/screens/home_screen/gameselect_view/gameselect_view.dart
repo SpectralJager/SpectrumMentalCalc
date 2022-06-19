@@ -10,13 +10,6 @@ import 'widgets.dart';
 class GameSelectView extends StatelessWidget {
   GameSelectView({Key? key}) : super(key: key);
 
-  final animations_list = [
-    "assets/svg/plus.svg",
-    "assets/svg/minus.svg",
-    "assets/svg/multiply.svg",
-    "assets/svg/division.svg",
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +37,7 @@ class GameSelectView extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (ctx, index) {
+                  var mode = Mode.values[index];
                   return Builder(builder: (context) {
                     var offlineGameType = context.select(
                       (SelectedOfflineTypeCubit _) => _.state,
@@ -53,14 +47,15 @@ class GameSelectView extends StatelessWidget {
                       tappable: false,
                       middleColor: Theme.of(context).colorScheme.background,
                       transitionType: ContainerTransitionType.fade,
-                      transitionDuration: const Duration(milliseconds: 500),
+                      transitionDuration: const Duration(milliseconds: 700),
                       closedElevation: 0,
                       closedBuilder: (context, openContainer) {
                         return ModeCard(
-                          mode_anim: animations_list[index],
+                          mode_anim:
+                              'assets/svg/${mode.name.toLowerCase()}.svg',
                           lvl: 1,
                           points: 1,
-                          mode: Mode.values[index],
+                          mode: mode,
                           onTap: openContainer,
                         );
                       },

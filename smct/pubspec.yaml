@@ -29,9 +29,9 @@ flutter:
     - assets/svg/btn.svg
     - assets/svg/play_btn.svg
     - assets/svg/division.svg
-    - assets/svg/minus.svg
-    - assets/svg/multiply.svg
-    - assets/svg/plus.svg
+    - assets/svg/subtraction.svg
+    - assets/svg/multiplication.svg
+    - assets/svg/summation.svg
     - assets/anim/plus.json
     - assets/anim/minus.json
     - assets/anim/div.json
