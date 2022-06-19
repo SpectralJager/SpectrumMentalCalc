@@ -1,34 +1,64 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smct/blocs/homenav/homenav_cubit.dart';
+import 'package:smct/blocs/selectedofflinetype/selectedofflinetype_cubit.dart';
+import 'package:smct/screens/home_screen/gameselect_view/gameselect_view.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeNavCubit(),
-      child: const _HomeScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => HomeNavCubit()),
+        BlocProvider(create: (_) => SelectedOfflineTypeCubit()),
+      ],
+      child: _HomeScreen(),
     );
   }
 }
 
 class _HomeScreen extends StatelessWidget {
-  const _HomeScreen({Key? key}) : super(key: key);
+  final List<Widget> _home_item = [
+    GameSelectView(),
+    Container(
+      key: const ValueKey(1),
+      width: 300,
+      height: 300,
+      color: Colors.red,
+    ),
+    Container(
+      key: const ValueKey(2),
+      width: 300,
+      height: 300,
+      color: Colors.green,
+    ),
+  ];
+
+  _HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int current_index =
-        context.select((HomeNavCubit _) => _.state.current_index);
+    int current_index = context.select((HomeNavCubit _) => _.state);
     return Scaffold(
       body: SafeArea(
         child: Row(
           children: [
             _generateSideNavbar(context, current_index),
             Expanded(
-              child: Center(
-                child: Text('selectedIndex: $current_index'),
+              child: PageTransitionSwitcher(
+                duration: const Duration(seconds: 1),
+                transitionBuilder:
+                    (child, primaryAnimation, secondaryAnimation) =>
+                        SharedAxisTransition(
+                  animation: primaryAnimation,
+                  secondaryAnimation: secondaryAnimation,
+                  transitionType: SharedAxisTransitionType.vertical,
+                  child: child,
+                ),
+                child: _home_item[current_index],
               ),
             )
           ],
@@ -63,13 +93,14 @@ class _HomeScreen extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 20),
-            child: CircleAvatar(
+            child: FloatingActionButton.small(
+              heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.onSecondary,
-              radius: 25,
               child: Icon(
                 Icons.people,
                 color: Theme.of(context).colorScheme.secondary,
               ),
+              onPressed: () {},
             ),
           ),
         ),
