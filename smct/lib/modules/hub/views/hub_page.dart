@@ -1,10 +1,15 @@
 part of 'views.dart';
 
-class HubView extends StatelessWidget {
-  HubView({Key? key}) : super(key: key);
+class HubPage extends StatelessWidget {
+  HubPage({Key? key}) : super(key: key);
 
   final List<Widget> _homeItem = [
-    SelectGameView(),
+    Container(
+      key: const ValueKey(0),
+      width: 300,
+      height: 300,
+      color: Colors.purple,
+    ),
     Container(
       key: const ValueKey(1),
       width: 300,
@@ -27,22 +32,25 @@ class HubView extends StatelessWidget {
         child: Row(
           children: [
             _sideNavbar(context, currentIndex),
-            Expanded(
-              child: PageTransitionSwitcher(
-                duration: const Duration(seconds: 1),
-                transitionBuilder:
-                    (child, primaryAnimation, secondaryAnimation) =>
-                        SharedAxisTransition(
-                  animation: primaryAnimation,
-                  secondaryAnimation: secondaryAnimation,
-                  transitionType: SharedAxisTransitionType.vertical,
-                  child: child,
-                ),
-                child: _homeItem[currentIndex],
-              ),
-            )
+            _mainBody(currentIndex)
           ],
         ),
+      ),
+    );
+  }
+
+  Expanded _mainBody(int currentIndex) {
+    return Expanded(
+      child: PageTransitionSwitcher(
+        duration: const Duration(seconds: 1),
+        transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
+            SharedAxisTransition(
+          animation: primaryAnimation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.vertical,
+          child: child,
+        ),
+        child: _homeItem[currentIndex],
       ),
     );
   }

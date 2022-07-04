@@ -7,7 +7,7 @@ part 'arguments.dart';
 final routes = {
   '/': (context) => BlocProvider(
         create: (context) => NavigationRailsCubit(),
-        child: HubView(),
+        child: HubPage(),
       ),
   // '/game': (context) => GameView(),
   // '/profile': (context) => ProfileView(),
