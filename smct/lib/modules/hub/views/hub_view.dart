@@ -1,28 +1,10 @@
-import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smct/blocs/homenav/homenav_cubit.dart';
-import 'package:smct/blocs/selectedofflinetype/selectedofflinetype_cubit.dart';
-import 'package:smct/screens/home_screen/gameselect_view/gameselect_view.dart';
+part of 'views.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HubView extends StatelessWidget {
+  HubView({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => HomeNavCubit()),
-        BlocProvider(create: (_) => SelectedOfflineTypeCubit()),
-      ],
-      child: _HomeScreen(),
-    );
-  }
-}
-
-class _HomeScreen extends StatelessWidget {
-  final List<Widget> _home_item = [
-    GameSelectView(),
+  final List<Widget> _homeItem = [
+    SelectGameView(),
     Container(
       key: const ValueKey(1),
       width: 300,
@@ -37,16 +19,14 @@ class _HomeScreen extends StatelessWidget {
     ),
   ];
 
-  _HomeScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    int current_index = context.select((HomeNavCubit _) => _.state);
+    int currentIndex = context.watch<NavigationRailsCubit>().state;
     return Scaffold(
       body: SafeArea(
         child: Row(
           children: [
-            _generateSideNavbar(context, current_index),
+            _sideNavbar(context, currentIndex),
             Expanded(
               child: PageTransitionSwitcher(
                 duration: const Duration(seconds: 1),
@@ -58,7 +38,7 @@ class _HomeScreen extends StatelessWidget {
                   transitionType: SharedAxisTransitionType.vertical,
                   child: child,
                 ),
-                child: _home_item[current_index],
+                child: _homeItem[currentIndex],
               ),
             )
           ],
@@ -67,7 +47,7 @@ class _HomeScreen extends StatelessWidget {
     );
   }
 
-  NavigationRail _generateSideNavbar(BuildContext context, int current_index) {
+  NavigationRail _sideNavbar(BuildContext context, int currentIndex) {
     return NavigationRail(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       selectedLabelTextStyle: Theme.of(context)
@@ -78,13 +58,13 @@ class _HomeScreen extends StatelessWidget {
       elevation: 1,
       useIndicator: true,
       labelType: NavigationRailLabelType.none,
-      selectedIndex: current_index,
+      selectedIndex: currentIndex,
       indicatorColor: Theme.of(context).colorScheme.onSecondary,
       selectedIconTheme: IconThemeData(
         color: Theme.of(context).colorScheme.secondary,
       ),
-      onDestinationSelected: (new_index) =>
-          context.read<HomeNavCubit>().changeIndex(new_index),
+      onDestinationSelected: (newIndex) =>
+          context.read<NavigationRailsCubit>().changeHubView(newIndex),
       leading: const SizedBox(
         height: 64,
       ),
