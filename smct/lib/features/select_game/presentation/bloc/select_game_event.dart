@@ -6,3 +6,17 @@ abstract class SelectGameEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class ChangeGameType extends SelectGameEvent {
+  final GameType gameType;
+
+  const ChangeGameType(this.gameType);
+}
+
+class ChangeGameMode extends SelectGameEvent {
+  final GameMode gameMode;
+
+  const ChangeGameMode(this.gameMode);
+}
+
+class SubmitGameSettings extends SelectGameEvent {}

@@ -1,10 +1,23 @@
 part of 'select_game_bloc.dart';
 
-abstract class SelectGameState extends Equatable {
-  const SelectGameState();
-  
-  @override
-  List<Object> get props => [];
-}
+@immutable
+class SelectGameState extends Equatable {
+  final GameType gameType;
+  final GameMode gameMode;
 
-class SelectGameInitial extends SelectGameState {}
+  const SelectGameState({required this.gameType, required this.gameMode});
+
+  factory SelectGameState.initial() {
+    return SelectGameState(
+        gameType: GameType.Timer, gameMode: GameMode.Summation);
+  }
+
+  SelectGameState copyWith({GameType? gameType, GameMode? gameMode}) {
+    return SelectGameState(
+        gameType: gameType ?? this.gameType,
+        gameMode: gameMode ?? this.gameMode);
+  }
+
+  @override
+  List<Object> get props => [gameType, gameMode];
+}

@@ -1,16 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:smct/features/select_game/presentation/widgets/select_game_page.dart';
 
 class HubCubit extends Cubit<int> {
   HubCubit() : super(0);
 
-  final List<Widget> _homeItem = [
-    Container(
-      key: const ValueKey(0),
-      width: 300,
-      height: 300,
-      color: Colors.purple,
-    ),
+  final List<Widget> _hubItems = [
+    SelectGamePage(),
     Container(
       key: const ValueKey(1),
       width: 300,
@@ -29,5 +25,5 @@ class HubCubit extends Cubit<int> {
     emit(newIndex);
   }
 
-  Widget get currentHubPage => _homeItem[state];
+  Widget get currentHubPage => _hubItems[state];
 }
