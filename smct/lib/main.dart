@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smct/configs/routes/routes.dart';
-import 'package:smct/configs/themes/themes.dart';
+import 'package:smct/core/routes/routes.dart';
+import 'package:smct/core/themes/themes.dart';
 
 void main() {
   runApp(const MentalCalc());

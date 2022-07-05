@@ -1,61 +1,14 @@
-part of 'views.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smct/features/hub/presentation/cubit/hub_cubit.dart';
 
-class HubPage extends StatelessWidget {
-  HubPage({Key? key}) : super(key: key);
-
-  final List<Widget> _homeItem = [
-    Container(
-      key: const ValueKey(0),
-      width: 300,
-      height: 300,
-      color: Colors.purple,
-    ),
-    Container(
-      key: const ValueKey(1),
-      width: 300,
-      height: 300,
-      color: Colors.red,
-    ),
-    Container(
-      key: const ValueKey(2),
-      width: 300,
-      height: 300,
-      color: Colors.green,
-    ),
-  ];
+class HubSideBar extends StatelessWidget {
+  const HubSideBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int currentIndex = context.watch<NavigationRailsCubit>().state;
-    return Scaffold(
-      body: SafeArea(
-        child: Row(
-          children: [
-            _sideNavbar(context, currentIndex),
-            _mainBody(currentIndex)
-          ],
-        ),
-      ),
-    );
-  }
-
-  Expanded _mainBody(int currentIndex) {
-    return Expanded(
-      child: PageTransitionSwitcher(
-        duration: const Duration(seconds: 1),
-        transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
-            SharedAxisTransition(
-          animation: primaryAnimation,
-          secondaryAnimation: secondaryAnimation,
-          transitionType: SharedAxisTransitionType.vertical,
-          child: child,
-        ),
-        child: _homeItem[currentIndex],
-      ),
-    );
-  }
-
-  NavigationRail _sideNavbar(BuildContext context, int currentIndex) {
     return NavigationRail(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       selectedLabelTextStyle: Theme.of(context)
@@ -66,13 +19,13 @@ class HubPage extends StatelessWidget {
       elevation: 1,
       useIndicator: true,
       labelType: NavigationRailLabelType.none,
-      selectedIndex: currentIndex,
+      selectedIndex: context.watch<HubCubit>().state,
       indicatorColor: Theme.of(context).colorScheme.onSecondary,
       selectedIconTheme: IconThemeData(
         color: Theme.of(context).colorScheme.secondary,
       ),
       onDestinationSelected: (newIndex) =>
-          context.read<NavigationRailsCubit>().changeHubView(newIndex),
+          context.read<HubCubit>().changeIndex(newIndex),
       leading: const SizedBox(
         height: 64,
       ),
