@@ -8,7 +8,7 @@ class SelectGameState extends Equatable {
   const SelectGameState({required this.gameType, required this.gameMode});
 
   factory SelectGameState.initial() {
-    return SelectGameState(
+    return const SelectGameState(
         gameType: GameType.Timer, gameMode: GameMode.Summation);
   }
 

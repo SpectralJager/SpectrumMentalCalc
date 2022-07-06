@@ -19,4 +19,8 @@ class ChangeGameMode extends SelectGameEvent {
   const ChangeGameMode(this.gameMode);
 }
 
-class SubmitGameSettings extends SelectGameEvent {}
+class SubmitGameSettings extends SelectGameEvent {
+  final BuildContext ctx;
+
+  const SubmitGameSettings(this.ctx);
+}

@@ -28,6 +28,12 @@ class SelectGameBloc extends Bloc<SelectGameEvent, SelectGameState> {
 
   FutureOr<void> _submitGameSettings(
       SubmitGameSettings event, Emitter<SelectGameState> emit) {
-    print('Submittet');
+    Navigator.of(event.ctx).pushNamed(
+      '/game',
+      arguments: {
+        'gameType': state.gameType,
+        'gameMode': state.gameMode,
+      },
+    );
   }
 }

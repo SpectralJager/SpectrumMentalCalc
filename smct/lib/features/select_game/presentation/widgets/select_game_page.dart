@@ -14,7 +14,7 @@ class SelectGamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (ctx) => SelectGameBloc(),
-      child: _SelectGameView(),
+      child: const _SelectGameView(),
     );
   }
 }
@@ -26,13 +26,13 @@ class _SelectGameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.play_arrow),
-        label: Text('Start'),
+        icon: const Icon(Icons.play_arrow),
+        label: const Text('Start'),
         onPressed: () =>
-            context.read<SelectGameBloc>().add(SubmitGameSettings()),
+            context.read<SelectGameBloc>().add(SubmitGameSettings(context)),
       ),
       body: Column(
-        children: [
+        children: const [
           Header(),
           Divider(
             color: Colors.red,
