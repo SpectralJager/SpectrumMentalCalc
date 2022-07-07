@@ -7,10 +7,15 @@ abstract class GameEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GameSubmitAnswer extends GameEvent {
-  final int answer;
+class GameRestart extends GameEvent {
+  final GameEntity gameEntity;
 
-  GameSubmitAnswer({required String answer}) : answer = int.parse(answer);
+  const GameRestart(this.gameEntity);
+}
+
+class GameSubmitAnswer extends GameEvent {
+  final String answer;
+  const GameSubmitAnswer(this.answer);
 }
 
 class GameFinish extends GameEvent {}

@@ -33,18 +33,18 @@ abstract class GameUsecase {
 
   GameEntity decrementPoints(GameEntity gameEntity, int deltaPoint) {
     return gameEntity.copyWith(
-      score: gameEntity.score + deltaPoint,
+      score: gameEntity.score - deltaPoint,
     );
   }
 
   GameEntity changeScope(GameEntity gameEntity) {
     Scope? leftScope, rightScope;
     switch (gameEntity.lvl % 2) {
-      case 0:
+      case 1:
         leftScope =
             Scope(gameEntity.leftScope.max * 10, gameEntity.leftScope.max);
         break;
-      case 1:
+      case 0:
         rightScope =
             Scope(gameEntity.rightScope.max * 10, gameEntity.rightScope.max);
         break;
@@ -98,6 +98,7 @@ class SurviveGameUsecase extends GameUsecase {
     required dynamic args,
   }) {
     int health = args as int;
+    print(answer == result(gameEntity, gameMode));
     if (answer == result(gameEntity, gameMode)) {
       gameEntity = incrementPoints(gameEntity, deltaPoint);
       if (gameEntity.score % (5 * gameEntity.lvl) == 0) {
@@ -105,9 +106,10 @@ class SurviveGameUsecase extends GameUsecase {
         gameEntity = changeScope(gameEntity);
       }
     } else {
-      gameEntity = decrementPoints(gameEntity, deltaPoint);
+      // gameEntity = decrementPoints(gameEntity, deltaPoint);
       health = health - 1;
     }
+    gameEntity = generateValues(gameEntity, gameMode);
     return {"gameEntity": gameEntity.copyWith(), "health": health};
   }
 }
@@ -121,16 +123,16 @@ class TimerGameUsecase extends GameUsecase {
     required int deltaPoint,
     required dynamic args,
   }) {
+    int time = args as int;
     if (answer == result(gameEntity, gameMode)) {
       gameEntity = incrementPoints(gameEntity, deltaPoint);
       if (gameEntity.score % (5 * gameEntity.lvl) == 0) {
         gameEntity = changeLvl(gameEntity);
         gameEntity = changeScope(gameEntity);
       }
-    } else {
-      gameEntity = decrementPoints(gameEntity, deltaPoint);
-    }
-    return {"gameEntity": gameEntity.copyWith()};
+    } else {}
+    gameEntity = generateValues(gameEntity, gameMode);
+    return {"gameEntity": gameEntity.copyWith(), "time": time};
   }
 }
 
@@ -149,11 +151,10 @@ class EnduranceGameUsecase extends GameUsecase {
       if (gameEntity.score % (5 * gameEntity.lvl) == 0) {
         gameEntity = changeLvl(gameEntity);
         gameEntity = changeScope(gameEntity);
-        time += gameEntity.lvl * 2;
       }
-    } else {
-      gameEntity = decrementPoints(gameEntity, deltaPoint);
-    }
+      time += gameEntity.lvl * 2;
+    } else {}
+    gameEntity = generateValues(gameEntity, gameMode);
     return {"gameEntity": gameEntity.copyWith(), "time": time};
   }
 }
