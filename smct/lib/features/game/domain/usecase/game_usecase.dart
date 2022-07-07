@@ -4,12 +4,7 @@ import 'package:smct/core/constants/constants.dart';
 import 'package:smct/features/game/domain/entity/game_entity.dart';
 
 abstract class GameUsecase {
-  GameEntity gameEntity;
-  final GameMode gameMode;
-
-  GameUsecase({required this.gameEntity, required this.gameMode});
-
-  GameEntity generateValues() {
+  GameEntity generateValues(GameEntity gameEntity, GameMode gameMode) {
     int left = _generateValue(gameEntity.leftScope);
     int right = _generateValue(gameEntity.rightScope);
     if (gameMode == GameMode.Division) {
@@ -30,19 +25,19 @@ abstract class GameUsecase {
     return Random().nextInt(scope.max - scope.min) + scope.min;
   }
 
-  GameEntity incrementPoints(int deltaPoint) {
+  GameEntity incrementPoints(GameEntity gameEntity, int deltaPoint) {
     return gameEntity.copyWith(
       score: gameEntity.score + deltaPoint,
     );
   }
 
-  GameEntity decrementPoints(int deltaPoint) {
+  GameEntity decrementPoints(GameEntity gameEntity, int deltaPoint) {
     return gameEntity.copyWith(
       score: gameEntity.score + deltaPoint,
     );
   }
 
-  GameEntity changeScope() {
+  GameEntity changeScope(GameEntity gameEntity) {
     Scope? leftScope, rightScope;
     switch (gameEntity.lvl % 2) {
       case 0:
@@ -60,14 +55,11 @@ abstract class GameUsecase {
     );
   }
 
-  GameEntity changeLvl() {
+  GameEntity changeLvl(GameEntity gameEntity) {
     return gameEntity.copyWith(lvl: gameEntity.lvl + 1);
   }
 
-  GameEntity submitAnswer(int answer, int deltaPoint) =>
-      throw UnimplementedError();
-
-  int get result {
+  int result(GameEntity gameEntity, GameMode gameMode) {
     int temp;
     switch (gameMode) {
       case GameMode.Summation:
@@ -85,29 +77,83 @@ abstract class GameUsecase {
     }
     return temp;
   }
+
+  Map<String, dynamic> submitAnswer({
+    required GameEntity gameEntity,
+    required GameMode gameMode,
+    required int answer,
+    required int deltaPoint,
+    required dynamic args,
+  }) =>
+      throw UnimplementedError();
 }
 
 class SurviveGameUsecase extends GameUsecase {
-  int health;
-
-  SurviveGameUsecase({
-    required super.gameEntity,
-    required super.gameMode,
-    this.health = 3,
-  });
-
   @override
-  GameEntity submitAnswer(int answer, int deltaPoint) {
-    if (answer == result) {
-      gameEntity = incrementPoints(deltaPoint);
+  Map<String, dynamic> submitAnswer({
+    required GameEntity gameEntity,
+    required GameMode gameMode,
+    required int answer,
+    required int deltaPoint,
+    required dynamic args,
+  }) {
+    int health = args as int;
+    if (answer == result(gameEntity, gameMode)) {
+      gameEntity = incrementPoints(gameEntity, deltaPoint);
       if (gameEntity.score % (5 * gameEntity.lvl) == 0) {
-        gameEntity = changeLvl();
-        gameEntity = changeScope();
+        gameEntity = changeLvl(gameEntity);
+        gameEntity = changeScope(gameEntity);
       }
     } else {
-      gameEntity = decrementPoints(deltaPoint);
+      gameEntity = decrementPoints(gameEntity, deltaPoint);
       health = health - 1;
     }
-    return gameEntity.copyWith();
+    return {"gameEntity": gameEntity.copyWith(), "health": health};
+  }
+}
+
+class TimerGameUsecase extends GameUsecase {
+  @override
+  Map<String, dynamic> submitAnswer({
+    required GameEntity gameEntity,
+    required GameMode gameMode,
+    required int answer,
+    required int deltaPoint,
+    required dynamic args,
+  }) {
+    if (answer == result(gameEntity, gameMode)) {
+      gameEntity = incrementPoints(gameEntity, deltaPoint);
+      if (gameEntity.score % (5 * gameEntity.lvl) == 0) {
+        gameEntity = changeLvl(gameEntity);
+        gameEntity = changeScope(gameEntity);
+      }
+    } else {
+      gameEntity = decrementPoints(gameEntity, deltaPoint);
+    }
+    return {"gameEntity": gameEntity.copyWith()};
+  }
+}
+
+class EnduranceGameUsecase extends GameUsecase {
+  @override
+  Map<String, dynamic> submitAnswer({
+    required GameEntity gameEntity,
+    required GameMode gameMode,
+    required int answer,
+    required int deltaPoint,
+    required dynamic args,
+  }) {
+    int time = args as int;
+    if (answer == result(gameEntity, gameMode)) {
+      gameEntity = incrementPoints(gameEntity, deltaPoint);
+      if (gameEntity.score % (5 * gameEntity.lvl) == 0) {
+        gameEntity = changeLvl(gameEntity);
+        gameEntity = changeScope(gameEntity);
+        time += gameEntity.lvl * 2;
+      }
+    } else {
+      gameEntity = decrementPoints(gameEntity, deltaPoint);
+    }
+    return {"gameEntity": gameEntity.copyWith(), "time": time};
   }
 }
