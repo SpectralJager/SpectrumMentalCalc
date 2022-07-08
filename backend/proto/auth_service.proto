@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package auth_service;
+
+option go_package = "./auth_service;auth_service";
+
+message User {
+    string username = 1;
+    string passwordHash = 2;
+}
+
+message LoginRequest {
+    User user = 1;
+}
+message LoginResponse {
+    string result = 1;
+}
+
+message RegisterRequest {
+    User user = 1;
+}
+message RegisterResponse {
+    string result = 1;
+}
+
+message UserInfoRequest {
+    
+}
+message UserInfoResponse {
+    
+}
+
+message UpdateUserRequest {
+    
+}
+message UpdateUserResponse {
+    
+}
+
+service Auth {
+    rpc Login (LoginRequest) returns (LoginResponse);
+    rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc GetUserInfo (UserInfoRequest) returns (UserInfoResponse);
+    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+}
