@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smct/config/theme.dart';
-import 'package:smct/screens/home_screen/home_screen.dart';
+import 'package:smct/core/routes/routes.dart';
+import 'package:smct/core/themes/themes.dart';
 
 void main() {
   runApp(const MentalCalc());
@@ -13,8 +13,9 @@ class MentalCalc extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: theme,
-      home: HomeScreen(),
+      theme: main_theme,
+      routes: routes,
+      initialRoute: '/',
     );
   }
 }
