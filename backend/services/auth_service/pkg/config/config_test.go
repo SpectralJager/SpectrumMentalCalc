@@ -3,7 +3,7 @@ package config_test
 import (
 	"testing"
 
-	"unknspectrum.tech/mental_calc/auth/pkg/config"
+	"github.com/SpectralJager/SpectrumMentalCalc/backend/pkg/config"
 )
 
 func TestGetConfgi(t *testing.T) {

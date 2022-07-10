@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"testing"
 
-	"unknspectrum.tech/mental_calc/auth/pkg/config"
-	"unknspectrum.tech/mental_calc/auth/pkg/db"
+	"github.com/SpectralJager/SpectrumMentalCalc/backend/pkg/config"
+	"github.com/SpectralJager/SpectrumMentalCalc/backend/pkg/db"
 )
 
 var database *sql.DB
@@ -20,6 +20,7 @@ func TestCreateConnnection(t *testing.T) {
 		database_conf["username"].(string),
 		database_conf["password"].(string),
 		database_conf["database_ip"].(string),
+		database_conf["database"].(string),
 	)
 	if err != nil {
 		t.Fatalf(err.Error())
