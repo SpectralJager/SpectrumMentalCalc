@@ -21,7 +21,6 @@ type server struct {
 
 func (s *server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 	sqlStr := fmt.Sprintf("select id, username from users where username = '%s' and password = '%s'", req.User.Username, req.User.PasswordHash)
-	log.Println(sqlStr)
 	_, err := s.db.Query(sqlStr)
 	if err != nil {
 		return &pb.LoginResponse{Result: "Incorect password or username", Token: ""}, err
@@ -31,12 +30,26 @@ func (s *server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResp
 
 func (s *server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	sqlStr := fmt.Sprintf("insert into users (username, password) values ('%v', '%v')", req.User.Username, req.User.PasswordHash)
-	log.Println(sqlStr)
 	_, err := s.db.Exec(sqlStr)
 	if err != nil {
 		return &pb.RegisterResponse{Result: "Incorect password or username", Token: ""}, err
 	}
 	return &pb.RegisterResponse{Result: "registered", Token: "2"}, nil
+}
+
+func (s *server) GetUser(ctx context.Context, req *pb.UserRequest) (*pb.UserResponse, error) {
+	sqlStr := fmt.Sprintf("select username, password from users where username = '%v'", req.Username)
+	row := s.db.QueryRow(sqlStr)
+	username, passwordHash := "", ""
+	err := row.Scan(&username, &passwordHash)
+	if err != nil {
+		return &pb.UserResponse{Result: "Incorect username", User: &pb.User{}}, err
+	}
+	var user = pb.User{
+		Username:     username,
+		PasswordHash: passwordHash,
+	}
+	return &pb.UserResponse{Result: "user", User: &user}, nil
 }
 
 func StartAuthServer(port int) {
@@ -52,7 +65,11 @@ func StartAuthServer(port int) {
 	if err != nil {
 		log.Fatalf("Cant create db connnection: %v", err)
 	}
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(
+			LoggerInterceptor,
+		),
+	)
 	pb.RegisterAuthServer(grpcServer, &server{db: *database})
 	reflection.Register(grpcServer)
 	log.Printf("Server start at localhost:%d", port)

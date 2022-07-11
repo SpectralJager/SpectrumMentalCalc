@@ -28,8 +28,18 @@ message RegisterResponse {
     string token = 2;
 }
 
+message UserRequest {
+    string username = 1;
+    string token = 2;
+}
+message UserResponse {
+    string result = 1;
+    User user = 2;
+}
+
 // Services
 service Auth {
     rpc Login (LoginRequest) returns (LoginResponse);
     rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc GetUser (UserRequest) returns (UserResponse);
 }
