@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package result.service;
+
+option go_package = ".;result.service";
+
+message Result {
+    string username = 1;
+    string score = 2;
+    string gameType = 3;
+    string gameMode = 4;
+}
+
+service UsersService {
+    rpc GetResult (GetReq) returns (GetResp);
+    rpc SaveResult (SaveReq) returns (SaveResp);
+    rpc UpdateResult (UpdateReq) returns (UpdateResp);
+    rpc DeleteResult (DeleteReq) returns (DeleteResp);
+}
+
+message GetReq {
+    string username = 1;
+    string gameType = 2;
+    string gameMode = 3;
+}
+message GetResp {
+    Result result = 1;
+}
+
+message SaveReq {
+    User user = 1;
+}
+message SaveResp {
+   string result = 2; 
+}
+
+message UpdateReq {
+    User user = 1;
+}
+message UpdateResp {
+   string result = 2; 
+}
+
+message DeleteReq {
+    User user = 1;
+}
+message DeleteResp {
+   string result = 2; 
+}

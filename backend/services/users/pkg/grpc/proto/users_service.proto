@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package users.service;
+
+option go_package = ".;users.service";
+
+message User {
+    string username = 1;
+    string passwordHash = 2;
+}
+
+service UsersService {
+    rpc GetUser (GetReq) returns (GetResp);
+    rpc SaveUser (SaveReq) returns (SaveResp);
+    rpc UpdateUser (UpdateReq) returns (UpdateResp);
+    rpc DeleteUser (DeleteReq) returns (DeleteResp);
+}
+
+message GetReq {
+    string username = 1;
+}
+message GetResp {
+    User user = 1;
+    string result = 2;
+}
+
+message SaveReq {
+    User user = 1;
+}
+message SaveResp {
+   string result = 2; 
+}
+
+message UpdateReq {
+    User user = 1;
+}
+message UpdateResp {
+   string result = 2; 
+}
+
+message DeleteReq {
+    User user = 1;
+}
+message DeleteResp {
+   string result = 2; 
+}
