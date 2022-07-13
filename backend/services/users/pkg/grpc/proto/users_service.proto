@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package users.service;
+package users_service;
 
-option go_package = ".;users.service";
+option go_package = ".;users_service";
 
 message User {
     string username = 1;
@@ -21,26 +21,22 @@ message GetReq {
 }
 message GetResp {
     User user = 1;
-    string result = 2;
 }
 
 message SaveReq {
     User user = 1;
 }
 message SaveResp {
-   string result = 2; 
 }
 
 message UpdateReq {
     User user = 1;
 }
 message UpdateResp {
-   string result = 2; 
 }
 
 message DeleteReq {
     User user = 1;
 }
 message DeleteResp {
-   string result = 2; 
 }
