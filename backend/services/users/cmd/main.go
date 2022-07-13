@@ -16,12 +16,15 @@ import (
 func main() {
 	godotenv.Load(".env")
 
-	database, _ := db.CreateConnection(os.Getenv("USERNAME"), os.Getenv("PASSWORD"), os.Getenv("DB_IP"), os.Getenv("DATABASE"))
+	database, err := db.CreateConnection(os.Getenv("USERNAME"), os.Getenv("PASSWORD"), os.Getenv("DB_IP"), os.Getenv("DATABASE"))
+	if err != nil {
+		panic(err)
+	}
 	userServer := server.CreateServer(database)
 
 	lis, err := net.Listen("tcp", "localhost:8080")
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package authentication;
+
+option go_package = ".;authentication";
+
+service AuthenticationService {
+    rpc RegisterToken (RegReq) returns (RegResp);
+    rpc RemoveToken (RemoveReq) returns (RemoveResp);
+    rpc CheckToken (CheckReq) returns (CheckResp);
+}
+
+message RegReq {
+    
+}
+message RegResp {
+    
+}
+
+message RemoveReq {
+    
+}
+message RemoveResp {
+    
+}
+
+message CheckReq {
+    string token = 1;
+}
+message CheckResp {
+    bool result = 1;
+}
