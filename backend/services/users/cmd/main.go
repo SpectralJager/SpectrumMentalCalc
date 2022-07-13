@@ -25,12 +25,11 @@ func main() {
 	}
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(
-			server.Interceptor,
+			userServer.Interceptor,
 		),
 	)
 	pb.RegisterUsersServiceServer(grpcServer, userServer)
 	reflection.Register(grpcServer)
 	log.Printf("Server start at localhost:%d", 8080)
 	grpcServer.Serve(lis)
-
 }
