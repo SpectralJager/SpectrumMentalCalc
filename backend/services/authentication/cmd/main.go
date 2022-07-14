@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
-	"strconv"
 
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
@@ -18,14 +18,14 @@ import (
 func main() {
 	godotenv.Load(".env")
 
-	temp, _ := strconv.Atoi(os.Getenv("DATABASE"))
-	database, err := db.CreateConnection(os.Getenv("DB_IP"), os.Getenv("PASSWORD"), temp)
+	database, err := db.CreateConnection(os.Getenv("USERNAME"), os.Getenv("PASSWORD"), os.Getenv("DB_IP"), os.Getenv("DATABASE"))
 	if err != nil {
 		panic(err)
 	}
 	authenticationServer := server.CreateServer(database)
 
-	lis, err := net.Listen("tcp", "localhost:8081")
+	addr := fmt.Sprintf("localhost:%v", os.Getenv("port"))
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
@@ -36,6 +36,6 @@ func main() {
 	)
 	pb.RegisterAuthenticationServiceServer(grpcServer, authenticationServer)
 	reflection.Register(grpcServer)
-	log.Printf("Server start at localhost:%d", 8081)
+	log.Printf("Server start at %v", addr)
 	grpcServer.Serve(lis)
 }

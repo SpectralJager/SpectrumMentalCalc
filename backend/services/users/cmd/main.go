@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -22,7 +23,8 @@ func main() {
 	}
 	userServer := server.CreateServer(database)
 
-	lis, err := net.Listen("tcp", "localhost:8080")
+	addr := fmt.Sprintf("localhost:%v", os.Getenv("port"))
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
@@ -33,6 +35,6 @@ func main() {
 	)
 	pb.RegisterUsersServiceServer(grpcServer, userServer)
 	reflection.Register(grpcServer)
-	log.Printf("Server start at localhost:%d", 8080)
+	log.Printf("Server start at %v", addr)
 	grpcServer.Serve(lis)
 }

@@ -26,7 +26,7 @@ func CreateConnection(user string, passwd string, db_ip string, db_name string) 
 func createUserTable(db *sql.DB) {
 	sqlStr := `create table if not exists users (
 		id serial primary key,
-		username  text not null,
+		username  text not null unique,
 		password  text not null
 	);`
 	_, err := db.Exec(sqlStr)

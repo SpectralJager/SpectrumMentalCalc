@@ -25,9 +25,8 @@ func (s *UsersServer) Interceptor(ctx context.Context, req interface{}, info *gr
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	defer conn.Close()
-
 	authenticationClient := authenticationPb.NewAuthenticationServiceClient(conn)
-	_, err = authenticationClient.CheckToken(ctx, &authenticationPb.CheckReq{})
+	_, err = authenticationClient.CheckToken(metadata.AppendToOutgoingContext(ctx, "token", md.Get("token")[0]), &authenticationPb.CheckReq{})
 	if err != nil {
 		return nil, err
 	}

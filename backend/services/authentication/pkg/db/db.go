@@ -1,27 +1,34 @@
 package db
 
 import (
-	"context"
+	"database/sql"
+	"fmt"
+	"log"
 
-	redis "github.com/go-redis/redis/v8"
+	_ "github.com/lib/pq"
 )
 
-func CreateConnection(addr string, password string, database int) (*redis.Client, error) {
-	rdb := redis.NewClient(
-		&redis.Options{
-			Addr:     addr,
-			Password: password,
-			DB:       database,
-		},
-	)
-	ctx := context.Background()
-	err := rdb.Set(ctx, "Test", "test", 0).Err()
+func CreateConnection(user string, passwd string, db_ip string, db_name string) (db *sql.DB, err error) {
+	connStr := fmt.Sprintf("postgresql://%v:%v@%v/%v?sslmode=disable", user, passwd, db_ip, db_name)
+	db, err = sql.Open("postgres", connStr)
 	if err != nil {
-		return nil, err
+		log.Printf("Can't open database. Check input values:\n %v ", err)
+		return
 	}
-	rdb.GetDel(ctx, "Test").Err()
+	if err = db.Ping(); err != nil {
+		log.Printf("Can't ping database:\n %v ", err)
+		return
+	}
+	createTokensTable(db)
+	return
+}
+
+func createTokensTable(db *sql.DB) {
+	sqlStr := `create table if not exists tokens (
+		token text primary key
+	);`
+	_, err := db.Exec(sqlStr)
 	if err != nil {
-		return nil, err
+		log.Fatalf("Can't create table tokens: %v", err)
 	}
-	return rdb, nil
 }
