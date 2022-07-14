@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -21,12 +22,12 @@ func (s *AuthenticationServer) RemoveToken(ctx context.Context, req *pb.RemoveRe
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveToken not implemented")
 }
 func (s *AuthenticationServer) CheckToken(ctx context.Context, req *pb.CheckReq) (*pb.CheckResp, error) {
-	if req.Token == "" {
+	md, _ := metadata.FromIncomingContext(ctx)
+	_, ok := md["token"]
+	if ok {
 		return nil, status.Error(codes.InvalidArgument, "Empty token")
 	}
-	return &pb.CheckResp{
-		Result: true,
-	}, nil
+	return &pb.CheckResp{}, nil
 }
 
 func CreateServer(database *redis.Client) *AuthenticationServer {
