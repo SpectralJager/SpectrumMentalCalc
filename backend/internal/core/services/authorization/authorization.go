@@ -17,7 +17,7 @@ func (s *AuthorizationService) Login(user *domain.User) (*domain.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	if storedUser.isEqual(user) {
+	if storedUser.Username == user.Username && storedUser.Password == user.Password {
 		token, err := s.authenticationService.GetToken(storedUser.Username)
 		if err != nil {
 			return nil, err
@@ -34,6 +34,7 @@ func (s *AuthorizationService) Login(user *domain.User) (*domain.Token, error) {
 	}
 	return nil, errors.New("wrong username or password")
 }
+
 func (s *AuthorizationService) Register(user *domain.User) (*domain.Token, error) {
 	_, err := s.userService.Create(user.Username, user.Password)
 	if err != nil {

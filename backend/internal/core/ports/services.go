@@ -2,7 +2,6 @@ package ports
 
 import (
 	domain "smct/backend/internal/core/domain"
-	"time"
 )
 
 type UserService interface {
@@ -14,17 +13,14 @@ type UserService interface {
 
 type ResultService interface {
 	Create(gameType, gameMode, scores, username string, lvl int) (*domain.Result, error)
-	Save(result *domain.Result) error
+	Update(newResult, oldResult *domain.Result) error
 	Get(gameType, gameMode, username string) (*domain.Result, error)
-	Delete(gameType, gameMody, username string) error
+	GetRange(gameType, gameMode string, start, end int) (*domain.Result, error)
 }
 
 type TutorialService interface {
-	Create(gameType, gameMode, title, body string, reference []string, time time.Time) (*domain.Tutorial, error)
-	Save(tutorial *domain.Tutorial) error
 	Get(gameType, gameMode, title string) (*domain.Tutorial, error)
 	GetTitles(gameType, gameMode string) ([]string, error)
-	Delete(gameType, gameMody, title string) error
 }
 
 type Authentication interface {
