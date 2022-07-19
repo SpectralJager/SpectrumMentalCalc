@@ -11,3 +11,10 @@ func NewUser(username, password string) *User {
 		Password: password,
 	}
 }
+
+func (s *User) isEqual(user *User) bool {
+	if s.Username == user.Username && s.Password == user.Password {
+		return true
+	}
+	return false
+}

@@ -7,9 +7,9 @@ import (
 
 type UserService interface {
 	Create(username, password string) (*domain.User, error)
-	Save(user *domain.User) error
+	Update(newUser, oldUser *domain.User) error
 	Get(username string) (*domain.User, error)
-	Delete(username string) error
+	Delete(user *domain.User) error
 }
 
 type ResultService interface {
@@ -27,8 +27,16 @@ type TutorialService interface {
 	Delete(gameType, gameMody, title string) error
 }
 
-type AuthorizationService interface {
+type Authentication interface {
 	CreateToken(username string) (*domain.Token, error)
-	CheckToken(token *domain.Token) (bool, error)
-	DeleteToken(token *domain.Token) error
+	GetToken(username string) (*domain.Token, error)
+	CheckToken(username string, token *domain.Token) (bool, error)
+	DeleteToken(username string, token *domain.Token) error
+}
+
+type Authorization interface {
+	Login(user *domain.User) (*domain.Token, error)
+	Register(user *domain.User) (*domain.Token, error)
+	Logout(user *domain.User) error
+	Delete(user *domain.User) error
 }
