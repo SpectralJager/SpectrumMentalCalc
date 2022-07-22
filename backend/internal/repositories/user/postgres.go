@@ -1,78 +1,119 @@
 package user_repository
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
-	"log"
 	"smct/backend/internal/core/domain"
+	"time"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
-type UserRepository struct {
-	db *sql.DB
-}
-
-func NewUserRepository(user string, passwd string, db_ip string, db_name string) (*UserRepository, error) {
-	connStr := fmt.Sprintf(
-		"postgresql://%v:%v@%v/%v?sslmode=disable",
-		user,
-		passwd,
-		db_ip,
-		db_name,
-	)
-
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		return nil, err
-	}
-	if err = db.Ping(); err != nil {
-		return nil, err
-	}
-	userRepository := UserRepository{
-		db: db,
-	}
-	userRepository.createUserTable()
-	return &userRepository, nil
-}
-
-func (s *UserRepository) createUserTable() {
-	sqlStr := `create table if not exists users (
+var schema = `create table if not exists users (
 		id serial primary key,
 		username  text not null unique,
 		password  text not null
-	);`
-	_, err := s.db.Exec(sqlStr)
-	if err != nil {
-		log.Fatalf("Can't create table users: %v", err)
-	}
+);`
+
+type UserPGRep struct {
+	driverName   string
+	username     string
+	password     string
+	addr         string
+	port         int
+	databaseName string
 }
 
-func (s *UserRepository) Get(username string) (*domain.User, error) {
-	sqlStr := "select username, password from users where username=$1"
-	row := s.db.QueryRow(sqlStr, username)
-	user := domain.User{}
-	err := row.Scan(&user)
+func NewUserPGRepository(user, passwd, addr string, port int, db_name string) (*UserPGRep, error) {
+	var userRep UserPGRep = UserPGRep{
+		driverName:   "postgres",
+		username:     user,
+		password:     passwd,
+		addr:         addr,
+		port:         port,
+		databaseName: db_name,
+	}
+
+	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
+	defer cancel()
+
+	db, err := userRep.CreateConn(connCtx)
 	if err != nil {
 		return nil, err
 	}
+
+	db.MustExec(schema)
+
+	return &userRep, nil
+}
+
+func (s *UserPGRep) dbSourceName() string {
+	return fmt.Sprintf("postgresql://%s:%s@%s:%d/%v?sslmode=disable", s.username, s.password, s.addr, s.port, s.databaseName)
+}
+
+func (s *UserPGRep) CreateConn(ctx context.Context) (*sqlx.DB, error) {
+	return sqlx.ConnectContext(ctx, s.driverName, s.dbSourceName())
+}
+
+func (s *UserPGRep) Get(username string) (*domain.User, error) {
+	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
+	defer cancel()
+
+	db, err := s.CreateConn(connCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	user := domain.User{}
+
+	query := "select username, password from users where username=$1"
+	err = db.Get(&user, query, username)
+	if err != nil {
+		return nil, err
+	}
+
 	return &user, nil
 }
 
-func (s *UserRepository) Save(user *domain.User) error {
-	query := `insert into users (username, password) values ($1, $2)`
-	_, err := s.db.Exec(query, user.Username, user.Password)
+func (s *UserPGRep) Save(user *domain.User) error {
+	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
+	defer cancel()
+
+	db, err := s.CreateConn(connCtx)
+	if err != nil {
+		return err
+	}
+
+	query := `insert into users (username, password) values (:username, :password)`
+	_, err = db.NamedExec(query, user)
 	return err
 }
 
-func (s *UserRepository) Update(new, old *domain.User) error {
+func (s *UserPGRep) Update(new, old *domain.User) error {
+	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
+	defer cancel()
+
+	db, err := s.CreateConn(connCtx)
+	if err != nil {
+		return err
+	}
+
 	query := `update users set username=$1, password=$2 where username=$3 and password=$4`
-	_, err := s.db.Exec(query, new.Username, new.Password, old.Username, old.Password)
+	_, err = db.Exec(query, new.Username, new.Password, old.Username, old.Password)
 	return err
 }
 
-func (s *UserRepository) Delete(user *domain.User) error {
-	query := `delete from users where username=$1 and password=$2`
-	_, err := s.db.Exec(query, user.Username, user.Password)
+func (s *UserPGRep) Delete(user *domain.User) error {
+	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
+	defer cancel()
+
+	db, err := s.CreateConn(connCtx)
+	if err != nil {
+		return err
+	}
+
+	query := `delete from users where username=:username and password=:password`
+	_, err = db.NamedExec(query, user)
 	return err
 }

@@ -3,6 +3,7 @@ package domain
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -25,4 +26,18 @@ func NewToken(str string) *Token {
 	}
 	token := Token(hex.EncodeToString(hasher.Sum(nil)))
 	return &token
+}
+
+func (s Token) MarshalBinary() ([]byte, error) {
+	return json.Marshal(s)
+}
+
+func TokenFromBinary(data []byte) (*Token, error) {
+	temp := ""
+	err := json.Unmarshal(data, &temp)
+	if err != nil {
+		return nil, err
+	}
+	token := Token(temp)
+	return &token, nil
 }
