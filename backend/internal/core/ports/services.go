@@ -18,11 +18,6 @@ type ResultService interface {
 	GetRange(gameType, gameMode string, start, end int) (*domain.Result, error)
 }
 
-type TutorialService interface {
-	Get(gameType, gameMode, title string) (*domain.Tutorial, error)
-	GetTitles(gameType, gameMode string) ([]string, error)
-}
-
 type Authentication interface {
 	CreateToken(username string) (*domain.Token, error)
 	GetToken(username string) (*domain.Token, error)
@@ -31,8 +26,8 @@ type Authentication interface {
 }
 
 type Authorization interface {
-	Login(user *domain.User) (*domain.Token, error)
-	Register(user *domain.User) (*domain.Token, error)
+	Login(username, password string) (*domain.Token, error)
+	Register(username, password string) (*domain.Token, error)
 	Logout(user *domain.User) error
 	Delete(user *domain.User) error
 }

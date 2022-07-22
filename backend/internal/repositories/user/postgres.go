@@ -14,7 +14,14 @@ type UserRepository struct {
 }
 
 func NewUserRepository(user string, passwd string, db_ip string, db_name string) (*UserRepository, error) {
-	connStr := fmt.Sprintf("postgresql://%v:%v@%v/%v?sslmode=disable", user, passwd, db_ip, db_name)
+	connStr := fmt.Sprintf(
+		"postgresql://%v:%v@%v/%v?sslmode=disable",
+		user,
+		passwd,
+		db_ip,
+		db_name,
+	)
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
@@ -42,7 +49,7 @@ func (s *UserRepository) createUserTable() {
 }
 
 func (s *UserRepository) Get(username string) (*domain.User, error) {
-	sqlStr := `select username, password from users where username=$1`
+	sqlStr := "select username, password from users where username=$1"
 	row := s.db.QueryRow(sqlStr, username)
 	user := domain.User{}
 	err := row.Scan(&user)

@@ -9,6 +9,12 @@ type UserService struct {
 	userRepository ports.UserRepository
 }
 
+func NewUserService(userRep ports.UserRepository) *UserService {
+	return &UserService{
+		userRepository: userRep,
+	}
+}
+
 func (s *UserService) Create(username, password string) (*domain.User, error) {
 	user := domain.NewUser(username, password)
 	err := s.userRepository.Save(user)

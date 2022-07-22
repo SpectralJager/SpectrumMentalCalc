@@ -18,13 +18,8 @@ type ResultRepository interface {
 	Update(new, old *domain.Result) error
 }
 
-type TutorialRepository interface {
-	Get(gameType, gameMode, title string) (*domain.Tutorial, error)
-	GetTitles(gameType, gameMode string) ([]string, error)
-}
-
 type TokenRepository interface {
 	Get(username string) (*domain.Token, error)
-	Save(token *domain.Token) error
-	Delete(username string, token *domain.Token) error
+	Save(username string, token *domain.Token) error
+	Delete(username string) error
 }

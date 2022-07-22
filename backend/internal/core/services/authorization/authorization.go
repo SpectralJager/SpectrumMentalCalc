@@ -12,21 +12,14 @@ type AuthorizationService struct {
 	userService           user_service.UserService
 }
 
-func (s *AuthorizationService) Login(user *domain.User) (*domain.Token, error) {
-	storedUser, err := s.userService.Get(user.Username)
+func (s *AuthorizationService) Login(username, password string) (*domain.Token, error) {
+	storedUser, err := s.userService.Get(username)
 	if err != nil {
 		return nil, err
 	}
-	if storedUser.Username == user.Username && storedUser.Password == user.Password {
-		token, err := s.authenticationService.GetToken(storedUser.Username)
-		if err != nil {
-			return nil, err
-		}
-		err = s.authenticationService.DeleteToken(storedUser.Username, token)
-		if err != nil {
-			return nil, err
-		}
-		token, err = s.authenticationService.CreateToken(storedUser.Username)
+	if storedUser.IsEqual(domain.NewUser(username, password)) {
+		s.authenticationService.DeleteToken(storedUser.Username)
+		token, err := s.authenticationService.CreateToken(storedUser.Username)
 		if err != nil {
 			return nil, err
 		}
@@ -35,8 +28,8 @@ func (s *AuthorizationService) Login(user *domain.User) (*domain.Token, error) {
 	return nil, errors.New("wrong username or password")
 }
 
-func (s *AuthorizationService) Register(user *domain.User) (*domain.Token, error) {
-	_, err := s.userService.Create(user.Username, user.Password)
+func (s *AuthorizationService) Register(username, password string) (*domain.Token, error) {
+	user, err := s.userService.Create(username, password)
 	if err != nil {
 		return nil, err
 	}

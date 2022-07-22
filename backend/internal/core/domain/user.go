@@ -1,8 +1,8 @@
 package domain
 
 type User struct {
-	Username string `sql:"username"`
-	Password string `sql:"password"`
+	Username string `db:"username"`
+	Password string `db:"password"`
 }
 
 func NewUser(username, password string) *User {
@@ -12,7 +12,7 @@ func NewUser(username, password string) *User {
 	}
 }
 
-func (s *User) isEqual(user *User) bool {
+func (s *User) IsEqual(user *User) bool {
 	if s.Username == user.Username && s.Password == user.Password {
 		return true
 	}

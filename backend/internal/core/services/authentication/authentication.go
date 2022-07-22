@@ -12,7 +12,7 @@ type AuthenticationService struct {
 
 func (s *AuthenticationService) CreateToken(username string) (*domain.Token, error) {
 	token := domain.NewToken(username)
-	err := s.tokenRepository.Save(token)
+	err := s.tokenRepository.Save(username, token)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +26,12 @@ func (s *AuthenticationService) GetToken(username string) (*domain.Token, error)
 	}
 	return token, nil
 }
+
+func (s *AuthenticationService) DeleteToken(username string) error {
+	err := s.tokenRepository.Delete(username)
+	return err
+}
+
 func (s *AuthenticationService) CheckToken(username string, token *domain.Token) (bool, error) {
 	storedToken, err := s.tokenRepository.Get(username)
 	if err != nil {
@@ -35,8 +41,4 @@ func (s *AuthenticationService) CheckToken(username string, token *domain.Token)
 		return false, errors.New("wrong token, access denied")
 	}
 	return true, nil
-}
-func (s *AuthenticationService) DeleteToken(username string, token *domain.Token) error {
-	err := s.tokenRepository.Delete(username, token)
-	return err
 }
