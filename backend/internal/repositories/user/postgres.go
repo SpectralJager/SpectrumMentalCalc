@@ -2,6 +2,7 @@ package user_repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"smct/backend/internal/core/domain"
@@ -12,8 +13,7 @@ import (
 )
 
 var schema = `create table if not exists users (
-		id serial primary key,
-		username  text not null unique,
+		username text primary key,
 		password  text not null
 );`
 
@@ -22,11 +22,11 @@ type UserPGRep struct {
 	username     string
 	password     string
 	addr         string
-	port         int
+	port         string
 	databaseName string
 }
 
-func NewUserPGRepository(user, passwd, addr string, port int, db_name string) *UserPGRep {
+func NewUserPGRepository(user, passwd, addr string, port string, db_name string) *UserPGRep {
 	var userRep UserPGRep = UserPGRep{
 		driverName:   "postgres",
 		username:     user,
@@ -50,7 +50,7 @@ func NewUserPGRepository(user, passwd, addr string, port int, db_name string) *U
 }
 
 func (s *UserPGRep) dbSourceName() string {
-	return fmt.Sprintf("postgresql://%s:%s@%s:%d/%v?sslmode=disable", s.username, s.password, s.addr, s.port, s.databaseName)
+	return fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", s.username, s.password, s.addr, s.port, s.databaseName)
 }
 
 func (s *UserPGRep) CreateConn(ctx context.Context) (*sqlx.DB, error) {
@@ -99,10 +99,18 @@ func (s *UserPGRep) Update(new, old *domain.User) error {
 	if err != nil {
 		return err
 	}
+	log.Println(2)
 
 	query := `update users set username=$1, password=$2 where username=$3 and password=$4`
-	_, err = db.Exec(query, new.Username, new.Password, old.Username, old.Password)
-	return err
+	res, err := db.Exec(query, new.Username, new.Password, old.Username, old.Password)
+	if err != nil {
+		return err
+	}
+	log.Println(res)
+	if c, _ := res.RowsAffected(); c == 0 {
+		return errors.New("cant update user")
+	}
+	return nil
 }
 
 func (s *UserPGRep) Delete(user *domain.User) error {

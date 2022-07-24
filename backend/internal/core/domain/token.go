@@ -32,6 +32,10 @@ func (s Token) MarshalBinary() ([]byte, error) {
 	return json.Marshal(s)
 }
 
+func (s Token) ToString() string {
+	return string(s)
+}
+
 func TokenFromBinary(data []byte) (*Token, error) {
 	temp := ""
 	err := json.Unmarshal(data, &temp)

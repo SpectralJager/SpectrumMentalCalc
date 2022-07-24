@@ -4,8 +4,10 @@ go 1.18
 
 require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.1
+	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.6
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
+	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 	google.golang.org/grpc v1.48.0
 	google.golang.org/protobuf v1.28.0
 )

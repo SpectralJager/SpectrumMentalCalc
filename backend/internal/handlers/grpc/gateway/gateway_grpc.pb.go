@@ -22,12 +22,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type V1Client interface {
-	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
-	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
-	UpdateProfile(ctx context.Context, in *UpdateProfileReq, opts ...grpc.CallOption) (*UpdateProfileResp, error)
-	SaveResult(ctx context.Context, in *SaveRecordReq, opts ...grpc.CallOption) (*SaveRecordResp, error)
-	GetResult(ctx context.Context, in *GetResultReq, opts ...grpc.CallOption) (*Results, error)
-	GetResults(ctx context.Context, in *GetResultsReq, opts ...grpc.CallOption) (V1_GetResultsClient, error)
+	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error)
+	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error)
+	UserUpdate(ctx context.Context, in *UserUpdateRequest, opts ...grpc.CallOption) (*UserUpdateResponse, error)
+	ResultSave(ctx context.Context, in *ResultSaveRequest, opts ...grpc.CallOption) (*ResultSaveResponse, error)
+	ResultGet(ctx context.Context, in *ResultGetRequest, opts ...grpc.CallOption) (*ResultGetResponse, error)
+	ResultsGet(ctx context.Context, in *ResultsGetRequest, opts ...grpc.CallOption) (V1_ResultsGetClient, error)
 }
 
 type v1Client struct {
@@ -38,57 +38,57 @@ func NewV1Client(cc grpc.ClientConnInterface) V1Client {
 	return &v1Client{cc}
 }
 
-func (c *v1Client) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
-	out := new(LoginResp)
-	err := c.cc.Invoke(ctx, "/gateway.v1/Login", in, out, opts...)
+func (c *v1Client) UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error) {
+	out := new(UserLoginResponse)
+	err := c.cc.Invoke(ctx, "/gateway.v1/UserLogin", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *v1Client) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error) {
-	out := new(RegisterResp)
-	err := c.cc.Invoke(ctx, "/gateway.v1/Register", in, out, opts...)
+func (c *v1Client) UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error) {
+	out := new(UserRegisterResponse)
+	err := c.cc.Invoke(ctx, "/gateway.v1/UserRegister", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *v1Client) UpdateProfile(ctx context.Context, in *UpdateProfileReq, opts ...grpc.CallOption) (*UpdateProfileResp, error) {
-	out := new(UpdateProfileResp)
-	err := c.cc.Invoke(ctx, "/gateway.v1/UpdateProfile", in, out, opts...)
+func (c *v1Client) UserUpdate(ctx context.Context, in *UserUpdateRequest, opts ...grpc.CallOption) (*UserUpdateResponse, error) {
+	out := new(UserUpdateResponse)
+	err := c.cc.Invoke(ctx, "/gateway.v1/UserUpdate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *v1Client) SaveResult(ctx context.Context, in *SaveRecordReq, opts ...grpc.CallOption) (*SaveRecordResp, error) {
-	out := new(SaveRecordResp)
-	err := c.cc.Invoke(ctx, "/gateway.v1/SaveResult", in, out, opts...)
+func (c *v1Client) ResultSave(ctx context.Context, in *ResultSaveRequest, opts ...grpc.CallOption) (*ResultSaveResponse, error) {
+	out := new(ResultSaveResponse)
+	err := c.cc.Invoke(ctx, "/gateway.v1/ResultSave", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *v1Client) GetResult(ctx context.Context, in *GetResultReq, opts ...grpc.CallOption) (*Results, error) {
-	out := new(Results)
-	err := c.cc.Invoke(ctx, "/gateway.v1/GetResult", in, out, opts...)
+func (c *v1Client) ResultGet(ctx context.Context, in *ResultGetRequest, opts ...grpc.CallOption) (*ResultGetResponse, error) {
+	out := new(ResultGetResponse)
+	err := c.cc.Invoke(ctx, "/gateway.v1/ResultGet", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *v1Client) GetResults(ctx context.Context, in *GetResultsReq, opts ...grpc.CallOption) (V1_GetResultsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &V1_ServiceDesc.Streams[0], "/gateway.v1/GetResults", opts...)
+func (c *v1Client) ResultsGet(ctx context.Context, in *ResultsGetRequest, opts ...grpc.CallOption) (V1_ResultsGetClient, error) {
+	stream, err := c.cc.NewStream(ctx, &V1_ServiceDesc.Streams[0], "/gateway.v1/ResultsGet", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &v1GetResultsClient{stream}
+	x := &v1ResultsGetClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -98,17 +98,17 @@ func (c *v1Client) GetResults(ctx context.Context, in *GetResultsReq, opts ...gr
 	return x, nil
 }
 
-type V1_GetResultsClient interface {
-	Recv() (*Results, error)
+type V1_ResultsGetClient interface {
+	Recv() (*ResultsGetResponse, error)
 	grpc.ClientStream
 }
 
-type v1GetResultsClient struct {
+type v1ResultsGetClient struct {
 	grpc.ClientStream
 }
 
-func (x *v1GetResultsClient) Recv() (*Results, error) {
-	m := new(Results)
+func (x *v1ResultsGetClient) Recv() (*ResultsGetResponse, error) {
+	m := new(ResultsGetResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -119,12 +119,12 @@ func (x *v1GetResultsClient) Recv() (*Results, error) {
 // All implementations must embed UnimplementedV1Server
 // for forward compatibility
 type V1Server interface {
-	Login(context.Context, *LoginReq) (*LoginResp, error)
-	Register(context.Context, *RegisterReq) (*RegisterResp, error)
-	UpdateProfile(context.Context, *UpdateProfileReq) (*UpdateProfileResp, error)
-	SaveResult(context.Context, *SaveRecordReq) (*SaveRecordResp, error)
-	GetResult(context.Context, *GetResultReq) (*Results, error)
-	GetResults(*GetResultsReq, V1_GetResultsServer) error
+	UserLogin(context.Context, *UserLoginRequest) (*UserLoginResponse, error)
+	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error)
+	UserUpdate(context.Context, *UserUpdateRequest) (*UserUpdateResponse, error)
+	ResultSave(context.Context, *ResultSaveRequest) (*ResultSaveResponse, error)
+	ResultGet(context.Context, *ResultGetRequest) (*ResultGetResponse, error)
+	ResultsGet(*ResultsGetRequest, V1_ResultsGetServer) error
 	mustEmbedUnimplementedV1Server()
 }
 
@@ -132,23 +132,23 @@ type V1Server interface {
 type UnimplementedV1Server struct {
 }
 
-func (UnimplementedV1Server) Login(context.Context, *LoginReq) (*LoginResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedV1Server) UserLogin(context.Context, *UserLoginRequest) (*UserLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserLogin not implemented")
 }
-func (UnimplementedV1Server) Register(context.Context, *RegisterReq) (*RegisterResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+func (UnimplementedV1Server) UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserRegister not implemented")
 }
-func (UnimplementedV1Server) UpdateProfile(context.Context, *UpdateProfileReq) (*UpdateProfileResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
+func (UnimplementedV1Server) UserUpdate(context.Context, *UserUpdateRequest) (*UserUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserUpdate not implemented")
 }
-func (UnimplementedV1Server) SaveResult(context.Context, *SaveRecordReq) (*SaveRecordResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SaveResult not implemented")
+func (UnimplementedV1Server) ResultSave(context.Context, *ResultSaveRequest) (*ResultSaveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResultSave not implemented")
 }
-func (UnimplementedV1Server) GetResult(context.Context, *GetResultReq) (*Results, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetResult not implemented")
+func (UnimplementedV1Server) ResultGet(context.Context, *ResultGetRequest) (*ResultGetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResultGet not implemented")
 }
-func (UnimplementedV1Server) GetResults(*GetResultsReq, V1_GetResultsServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetResults not implemented")
+func (UnimplementedV1Server) ResultsGet(*ResultsGetRequest, V1_ResultsGetServer) error {
+	return status.Errorf(codes.Unimplemented, "method ResultsGet not implemented")
 }
 func (UnimplementedV1Server) mustEmbedUnimplementedV1Server() {}
 
@@ -163,114 +163,114 @@ func RegisterV1Server(s grpc.ServiceRegistrar, srv V1Server) {
 	s.RegisterService(&V1_ServiceDesc, srv)
 }
 
-func _V1_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginReq)
+func _V1_UserLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserLoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(V1Server).Login(ctx, in)
+		return srv.(V1Server).UserLogin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gateway.v1/Login",
+		FullMethod: "/gateway.v1/UserLogin",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V1Server).Login(ctx, req.(*LoginReq))
+		return srv.(V1Server).UserLogin(ctx, req.(*UserLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V1_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterReq)
+func _V1_UserRegister_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(V1Server).Register(ctx, in)
+		return srv.(V1Server).UserRegister(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gateway.v1/Register",
+		FullMethod: "/gateway.v1/UserRegister",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V1Server).Register(ctx, req.(*RegisterReq))
+		return srv.(V1Server).UserRegister(ctx, req.(*UserRegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V1_UpdateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateProfileReq)
+func _V1_UserUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserUpdateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(V1Server).UpdateProfile(ctx, in)
+		return srv.(V1Server).UserUpdate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gateway.v1/UpdateProfile",
+		FullMethod: "/gateway.v1/UserUpdate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V1Server).UpdateProfile(ctx, req.(*UpdateProfileReq))
+		return srv.(V1Server).UserUpdate(ctx, req.(*UserUpdateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V1_SaveResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SaveRecordReq)
+func _V1_ResultSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResultSaveRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(V1Server).SaveResult(ctx, in)
+		return srv.(V1Server).ResultSave(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gateway.v1/SaveResult",
+		FullMethod: "/gateway.v1/ResultSave",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V1Server).SaveResult(ctx, req.(*SaveRecordReq))
+		return srv.(V1Server).ResultSave(ctx, req.(*ResultSaveRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V1_GetResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetResultReq)
+func _V1_ResultGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResultGetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(V1Server).GetResult(ctx, in)
+		return srv.(V1Server).ResultGet(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gateway.v1/GetResult",
+		FullMethod: "/gateway.v1/ResultGet",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V1Server).GetResult(ctx, req.(*GetResultReq))
+		return srv.(V1Server).ResultGet(ctx, req.(*ResultGetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V1_GetResults_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(GetResultsReq)
+func _V1_ResultsGet_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ResultsGetRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(V1Server).GetResults(m, &v1GetResultsServer{stream})
+	return srv.(V1Server).ResultsGet(m, &v1ResultsGetServer{stream})
 }
 
-type V1_GetResultsServer interface {
-	Send(*Results) error
+type V1_ResultsGetServer interface {
+	Send(*ResultsGetResponse) error
 	grpc.ServerStream
 }
 
-type v1GetResultsServer struct {
+type v1ResultsGetServer struct {
 	grpc.ServerStream
 }
 
-func (x *v1GetResultsServer) Send(m *Results) error {
+func (x *v1ResultsGetServer) Send(m *ResultsGetResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -282,30 +282,30 @@ var V1_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*V1Server)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Login",
-			Handler:    _V1_Login_Handler,
+			MethodName: "UserLogin",
+			Handler:    _V1_UserLogin_Handler,
 		},
 		{
-			MethodName: "Register",
-			Handler:    _V1_Register_Handler,
+			MethodName: "UserRegister",
+			Handler:    _V1_UserRegister_Handler,
 		},
 		{
-			MethodName: "UpdateProfile",
-			Handler:    _V1_UpdateProfile_Handler,
+			MethodName: "UserUpdate",
+			Handler:    _V1_UserUpdate_Handler,
 		},
 		{
-			MethodName: "SaveResult",
-			Handler:    _V1_SaveResult_Handler,
+			MethodName: "ResultSave",
+			Handler:    _V1_ResultSave_Handler,
 		},
 		{
-			MethodName: "GetResult",
-			Handler:    _V1_GetResult_Handler,
+			MethodName: "ResultGet",
+			Handler:    _V1_ResultGet_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "GetResults",
-			Handler:       _V1_GetResults_Handler,
+			StreamName:    "ResultsGet",
+			Handler:       _V1_ResultsGet_Handler,
 			ServerStreams: true,
 		},
 	},

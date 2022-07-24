@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	tokenRep = token_repository.NewTokenRepository("localhost", 6379, "")
+	tokenRep = token_repository.NewTokenRepository("localhost", "6379", "")
 	for i := 0; i < 10; i++ {
 		tokens = append(tokens, *domain.NewToken(strconv.Itoa(i)))
 	}

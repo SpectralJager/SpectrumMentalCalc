@@ -13,10 +13,10 @@ type TokenRedisRep struct {
 	db *redis.Client
 }
 
-func NewTokenRepository(addr string, port int, password string) *TokenRedisRep {
+func NewTokenRepository(addr string, port string, password string) *TokenRedisRep {
 	rdb := redis.NewClient(
 		&redis.Options{
-			Addr:     fmt.Sprintf("%s:%d", addr, port),
+			Addr:     fmt.Sprintf("%s:%s", addr, port),
 			Password: password,
 			DB:       15,
 		},

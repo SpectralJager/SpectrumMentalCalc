@@ -40,13 +40,13 @@ func (s *AuthenticationService) DeleteToken(username string) error {
 	return err
 }
 
-func (s *AuthenticationService) CheckToken(username string, token *domain.Token) (bool, error) {
+func (s *AuthenticationService) CheckToken(username string, token *domain.Token) error {
 	storedToken, err := s.tokenRepository.Get(username)
 	if err != nil {
-		return false, err
+		return err
 	}
-	if storedToken != token {
-		return false, errors.New("wrong token, access denied")
+	if *storedToken != *token {
+		return errors.New("wrong token, access denied")
 	}
-	return true, nil
+	return nil
 }

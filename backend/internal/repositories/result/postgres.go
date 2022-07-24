@@ -23,11 +23,11 @@ type ResultPGRep struct {
 	username     string
 	password     string
 	addr         string
-	port         int
+	port         string
 	databaseName string
 }
 
-func NewResultPGRepository(user, passwd, addr string, port int, db_name string) *ResultPGRep {
+func NewResultPGRepository(user, passwd, addr, port, db_name string) *ResultPGRep {
 	var resultRep ResultPGRep = ResultPGRep{
 		driverName:   "postgres",
 		username:     user,
@@ -37,7 +37,7 @@ func NewResultPGRepository(user, passwd, addr string, port int, db_name string) 
 		databaseName: db_name,
 	}
 
-	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*10))
+	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*20))
 	defer cancel()
 
 	db, err := resultRep.CreateConn(connCtx)
@@ -61,7 +61,7 @@ func NewResultPGRepository(user, passwd, addr string, port int, db_name string) 
 }
 
 func (s *ResultPGRep) dbSourceName() string {
-	return fmt.Sprintf("postgresql://%s:%s@%s:%d/%v?sslmode=disable", s.username, s.password, s.addr, s.port, s.databaseName)
+	return fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", s.username, s.password, s.addr, s.port, s.databaseName)
 }
 
 func (s *ResultPGRep) CreateConn(ctx context.Context) (*sqlx.DB, error) {

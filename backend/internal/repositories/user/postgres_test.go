@@ -28,7 +28,7 @@ func TestCreateRepo(t *testing.T) {
 		"test",
 		"",
 		"localhost",
-		5432,
+		"5432",
 		"mental_calc_test",
 	)
 }
