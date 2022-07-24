@@ -41,7 +41,7 @@ func (s *TokenRedisRep) Get(username string) (*domain.Token, error) {
 func (s *TokenRedisRep) Save(username string, token *domain.Token) error {
 	ctx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
 	defer cancel()
-	err := s.db.Set(ctx, username, token, 0).Err()
+	err := s.db.Set(ctx, username, token, time.Hour*2).Err()
 	return err
 }
 

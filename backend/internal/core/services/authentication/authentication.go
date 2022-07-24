@@ -10,6 +10,14 @@ type AuthenticationService struct {
 	tokenRepository ports.TokenRepository
 }
 
+func NewAuthenticationService(
+	tokenRepository ports.TokenRepository,
+) *AuthenticationService {
+	return &AuthenticationService{
+		tokenRepository: tokenRepository,
+	}
+}
+
 func (s *AuthenticationService) CreateToken(username string) (*domain.Token, error) {
 	token := domain.NewToken(username)
 	err := s.tokenRepository.Save(username, token)

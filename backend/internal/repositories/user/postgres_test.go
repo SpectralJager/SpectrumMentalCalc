@@ -24,17 +24,13 @@ var (
 )
 
 func TestCreateRepo(t *testing.T) {
-	var err error
-	userRep, err = user_repository.NewUserPGRepository(
+	userRep = user_repository.NewUserPGRepository(
 		"test",
 		"",
 		"localhost",
 		5432,
 		"mental_calc_test",
 	)
-	if err != nil {
-		t.Fatal(err)
-	}
 }
 
 func TestSave(t *testing.T) {

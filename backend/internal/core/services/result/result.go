@@ -9,6 +9,12 @@ type ResultService struct {
 	resultRepository ports.ResultRepository
 }
 
+func NewResultService(resRep ports.ResultRepository) *ResultService {
+	return &ResultService{
+		resultRepository: resRep,
+	}
+}
+
 func (s *ResultService) Create(gameType, gameMode, scores, username string, lvl int) (*domain.Result, error) {
 	result := domain.NewResult(gameType, gameMode, scores, username, lvl)
 	err := s.resultRepository.Save(result)

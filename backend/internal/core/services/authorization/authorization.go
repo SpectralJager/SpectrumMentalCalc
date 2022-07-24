@@ -8,18 +8,29 @@ import (
 )
 
 type AuthorizationService struct {
-	authenticationService authentication_service.AuthenticationService
-	userService           user_service.UserService
+	AuthenticationService authentication_service.AuthenticationService
+	UserService           user_service.UserService
+}
+
+func NewAuthorizationService(
+
+	authenticationService authentication_service.AuthenticationService,
+	userService user_service.UserService,
+) *AuthorizationService {
+	return &AuthorizationService{
+		AuthenticationService: authenticationService,
+		UserService:           userService,
+	}
 }
 
 func (s *AuthorizationService) Login(username, password string) (*domain.Token, error) {
-	storedUser, err := s.userService.Get(username)
+	storedUser, err := s.UserService.Get(username)
 	if err != nil {
 		return nil, err
 	}
 	if storedUser.IsEqual(domain.NewUser(username, password)) {
-		s.authenticationService.DeleteToken(storedUser.Username)
-		token, err := s.authenticationService.CreateToken(storedUser.Username)
+		s.AuthenticationService.DeleteToken(storedUser.Username)
+		token, err := s.AuthenticationService.CreateToken(storedUser.Username)
 		if err != nil {
 			return nil, err
 		}
@@ -29,11 +40,11 @@ func (s *AuthorizationService) Login(username, password string) (*domain.Token, 
 }
 
 func (s *AuthorizationService) Register(username, password string) (*domain.Token, error) {
-	user, err := s.userService.Create(username, password)
+	user, err := s.UserService.Create(username, password)
 	if err != nil {
 		return nil, err
 	}
-	token, err := s.authenticationService.CreateToken(user.Username)
+	token, err := s.AuthenticationService.CreateToken(user.Username)
 	if err != nil {
 		return nil, err
 	}

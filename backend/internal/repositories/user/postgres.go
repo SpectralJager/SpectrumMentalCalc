@@ -3,6 +3,7 @@ package user_repository
 import (
 	"context"
 	"fmt"
+	"log"
 	"smct/backend/internal/core/domain"
 	"time"
 
@@ -25,7 +26,7 @@ type UserPGRep struct {
 	databaseName string
 }
 
-func NewUserPGRepository(user, passwd, addr string, port int, db_name string) (*UserPGRep, error) {
+func NewUserPGRepository(user, passwd, addr string, port int, db_name string) *UserPGRep {
 	var userRep UserPGRep = UserPGRep{
 		driverName:   "postgres",
 		username:     user,
@@ -40,12 +41,12 @@ func NewUserPGRepository(user, passwd, addr string, port int, db_name string) (*
 
 	db, err := userRep.CreateConn(connCtx)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
 
 	db.MustExec(schema)
 
-	return &userRep, nil
+	return &userRep
 }
 
 func (s *UserPGRep) dbSourceName() string {

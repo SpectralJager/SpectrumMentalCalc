@@ -3,6 +3,7 @@ package result_repository
 import (
 	"context"
 	"fmt"
+	"log"
 	"smct/backend/internal/core/domain"
 	"strings"
 	"time"
@@ -26,7 +27,7 @@ type ResultPGRep struct {
 	databaseName string
 }
 
-func NewResultPGRepository(user, passwd, addr string, port int, db_name string) (*ResultPGRep, error) {
+func NewResultPGRepository(user, passwd, addr string, port int, db_name string) *ResultPGRep {
 	var resultRep ResultPGRep = ResultPGRep{
 		driverName:   "postgres",
 		username:     user,
@@ -41,7 +42,7 @@ func NewResultPGRepository(user, passwd, addr string, port int, db_name string) 
 
 	db, err := resultRep.CreateConn(connCtx)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
 
 	tx := db.MustBegin()
@@ -53,10 +54,10 @@ func NewResultPGRepository(user, passwd, addr string, port int, db_name string) 
 	}
 	err = tx.Commit()
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
 
-	return &resultRep, nil
+	return &resultRep
 }
 
 func (s *ResultPGRep) dbSourceName() string {

@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package gateway;
+
+option go_package = "./gateway;gateway";
+
+message User {
+    string username = 1;
+    string password = 2;
+}
+
+message Results {
+    string username = 1;
+    string gameType = 2;
+    string gameMode = 3;
+    string scores = 4;
+    int64 lvl = 5;
+}
+
+service v1 {
+    rpc Login (LoginReq) returns (LoginResp);
+    rpc Register (RegisterReq) returns (RegisterResp);
+    rpc UpdateProfile (UpdateProfileReq) returns (UpdateProfileResp);
+    rpc SaveResult (SaveRecordReq) returns (SaveRecordResp);
+    rpc GetResult (GetResultReq) returns (Results);
+    rpc GetResults (GetResultsReq) returns (stream Results);
+}
+
+message LoginReq {
+    User user = 1;
+}
+message LoginResp {
+    string token = 1;
+}
+
+message RegisterReq {
+    User newUser = 1;
+}
+message RegisterResp {
+    string token = 1;    
+}
+
+message UpdateProfileReq {
+    User newUser = 1;
+    User oldUser = 2;
+    string token = 3;    
+}
+message UpdateProfileResp {
+    string token = 1;    
+}
+
+message SaveRecordReq {
+    string username = 1;
+    string gameType = 2;
+    string gameMode = 3;
+    string scores = 4;
+    int64 lvl = 5;
+}
+message SaveRecordResp {
+}
+
+message GetResultReq {
+    string username = 1;
+    string gameType = 2;
+    string gameMode = 3;
+}
+message GetResultResp {
+    Results result = 1;
+}
+
+message GetResultsReq {
+    string gameType = 1;
+    string gameMode = 2;
+    int64 start = 3;
+    int64 count = 4;
+}
