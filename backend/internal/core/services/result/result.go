@@ -16,16 +16,20 @@ func NewResultService(resRep ports.ResultRepository) *ResultService {
 }
 
 func (s *ResultService) Create(gameType, gameMode, scores, username string, lvl int) (*domain.Result, error) {
-	result := domain.NewResult(gameType, gameMode, scores, username, lvl)
-	err := s.resultRepository.Save(result)
+	result := domain.NewResult(scores, username, lvl)
+	err := s.resultRepository.Save(gameType, gameMode, result)
+	if err != nil {
+		return nil, err
+	}
+	result, err = s.resultRepository.Get(gameType, gameMode, result.Username)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (s *ResultService) Update(newResult, oldResult *domain.Result) error {
-	return s.resultRepository.Update(newResult, oldResult)
+func (s *ResultService) Update(gameType, gameMode string, newResult, oldResult *domain.Result) error {
+	return s.resultRepository.Update(gameType, gameMode, newResult, oldResult)
 }
 
 func (s *ResultService) Get(gameType, gameMode, username string) (*domain.Result, error) {
@@ -36,8 +40,8 @@ func (s *ResultService) Get(gameType, gameMode, username string) (*domain.Result
 	return result, nil
 }
 
-func (s *ResultService) GetRange(gameType, gameMode string, start, end int) ([]domain.Result, error) {
-	results, err := s.resultRepository.GetRange(gameType, gameMode, start, end)
+func (s *ResultService) GetRange(gameType, gameMode string, start, count int) ([]domain.Result, error) {
+	results, err := s.resultRepository.GetRange(gameType, gameMode, start, count)
 	if err != nil {
 		return []domain.Result{}, err
 	}

@@ -12,16 +12,16 @@ var (
 	gameMode  = domain.GameMode[0]
 	gameType  = domain.GameType[0]
 	resutls   = []domain.Result{
-		{Username: "test1", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test2", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test3", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test4", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test5", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test6", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test7", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test8", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test9", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
-		{Username: "test0", Scores: "123", Lvl: 1, GameType: gameType, GameMode: gameMode},
+		{Username: "test1", Scores: "123", Lvl: 1},
+		{Username: "test2", Scores: "123", Lvl: 1},
+		{Username: "test3", Scores: "123", Lvl: 1},
+		{Username: "test4", Scores: "123", Lvl: 1},
+		{Username: "test5", Scores: "123", Lvl: 1},
+		{Username: "test6", Scores: "123", Lvl: 1},
+		{Username: "test7", Scores: "123", Lvl: 1},
+		{Username: "test8", Scores: "123", Lvl: 1},
+		{Username: "test9", Scores: "123", Lvl: 1},
+		{Username: "test0", Scores: "123", Lvl: 1},
 	}
 )
 
@@ -39,7 +39,7 @@ func TestSave(t *testing.T) {
 	descStr := "Try to save %v"
 	for _, v := range resutls {
 		t.Run(fmt.Sprintf(descStr, v), func(t *testing.T) {
-			err := resultRep.Save(&v)
+			err := resultRep.Save(gameType, gameMode, &v)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -80,13 +80,11 @@ func TestUpdate(t *testing.T) {
 	for _, v := range resutls {
 		t.Run(fmt.Sprintf(descStr, v), func(t *testing.T) {
 			newResult := domain.NewResult(
-				gameType,
-				gameMode,
 				v.Scores+"123",
 				v.Username+"updated",
 				v.Lvl+1,
 			)
-			err := resultRep.Update(newResult, &v)
+			err := resultRep.Update(gameType, gameMode, newResult, &v)
 			if err != nil {
 				t.Fatal(err)
 			}

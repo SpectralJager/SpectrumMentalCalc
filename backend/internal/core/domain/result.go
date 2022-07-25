@@ -1,17 +1,14 @@
 package domain
 
 type Result struct {
-	GameType string
-	GameMode string
+	Position int    `db:"row_number"`
 	Scores   string `db:"scores"`
 	Lvl      int    `db:"lvl"`
 	Username string `db:"username"`
 }
 
-func NewResult(gameType, gameMode, scores, username string, lvl int) *Result {
+func NewResult(scores, username string, lvl int) *Result {
 	return &Result{
-		GameType: gameType,
-		GameMode: gameMode,
 		Scores:   scores,
 		Lvl:      lvl,
 		Username: username,

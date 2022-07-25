@@ -77,9 +77,9 @@ func (s *ResultPGRep) Get(gameType, gameMode, username string) (*domain.Result, 
 		return nil, err
 	}
 
-	result := domain.NewResult(gameType, gameMode, "", username, 0)
+	result := domain.NewResult("", username, 0)
 
-	sqlStr := `select username, scores, lvl from %v_%v where username=$1`
+	sqlStr := `select * from (select row_number() over(order by scores desc),username, scores, lvl from %v_%v) as x where username=$1`
 	tempStr := fmt.Sprintf(sqlStr, strings.ToLower(gameType), strings.ToLower(gameMode))
 	err = db.Get(result, tempStr, username)
 	if err != nil {
@@ -88,7 +88,7 @@ func (s *ResultPGRep) Get(gameType, gameMode, username string) (*domain.Result, 
 
 	return result, nil
 }
-func (s *ResultPGRep) GetRange(gameType, gameMode string, start, end int) ([]domain.Result, error) {
+func (s *ResultPGRep) GetRange(gameType, gameMode string, start, count int) ([]domain.Result, error) {
 	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
 	defer cancel()
 
@@ -99,22 +99,22 @@ func (s *ResultPGRep) GetRange(gameType, gameMode string, start, end int) ([]dom
 
 	results := []domain.Result{}
 
-	sqlStr := fmt.Sprintf(`select username, scores, lvl from %v_%v order by scores desc offset %d limit %d`, strings.ToLower(gameType), strings.ToLower(gameMode), start, end-start)
+	sqlStr := fmt.Sprintf(`select * from (select row_number() over(order by scores desc),username, scores, lvl from %v_%v) as x offset %d limit %d`, strings.ToLower(gameType), strings.ToLower(gameMode), start, count)
 	err = db.Select(&results, sqlStr)
 	if err != nil {
 		return results, err
 	}
 
-	for _, v := range results {
-		v.GameType = gameType
-		v.GameMode = gameMode
-	}
+	// for _, v := range results {
+	// 	v.GameType = gameType
+	// 	v.GameMode = gameMode
+	// }
 
 	return results, nil
 
 }
 
-func (s *ResultPGRep) Save(result *domain.Result) error {
+func (s *ResultPGRep) Save(gameType, gameMode string, result *domain.Result) error {
 	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
 	defer cancel()
 
@@ -123,13 +123,13 @@ func (s *ResultPGRep) Save(result *domain.Result) error {
 		return err
 	}
 
-	query := fmt.Sprintf(`insert into %s_%s (username, scores, lvl) values (:username, :scores, :lvl)`, strings.ToLower(result.GameType), strings.ToLower(result.GameMode))
+	query := fmt.Sprintf(`insert into %s_%s (username, scores, lvl) values (:username, :scores, :lvl)`, strings.ToLower(gameType), strings.ToLower(gameMode))
 	_, err = db.NamedExec(query, result)
 
 	return err
 }
 
-func (s *ResultPGRep) Update(new, old *domain.Result) error {
+func (s *ResultPGRep) Update(gameType, gameMode string, new, old *domain.Result) error {
 	connCtx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Second*5))
 	defer cancel()
 
@@ -139,8 +139,8 @@ func (s *ResultPGRep) Update(new, old *domain.Result) error {
 	}
 
 	query := fmt.Sprintf(`update %s_%s set username=$1, scores=$2, lvl=$3 where username=$4 and scores=$5 and lvl=$6`,
-		strings.ToLower(new.GameType),
-		strings.ToLower(new.GameMode),
+		strings.ToLower(gameType),
+		strings.ToLower(gameMode),
 	)
 	_, err = db.Exec(query, new.Username, new.Scores, new.Lvl, old.Username, old.Scores, old.Lvl)
 

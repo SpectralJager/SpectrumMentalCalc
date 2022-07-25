@@ -14,8 +14,8 @@ type UserRepository interface {
 type ResultRepository interface {
 	Get(gameType, gameMode, username string) (*domain.Result, error)
 	GetRange(gameType, gameMode string, start, end int) ([]domain.Result, error)
-	Save(result *domain.Result) error
-	Update(new, old *domain.Result) error
+	Save(gameType, gameMode string, result *domain.Result) error
+	Update(gameType, gameMode string, new, old *domain.Result) error
 }
 
 type TokenRepository interface {

@@ -65,7 +65,6 @@ func (s *V1) UserRegister(ctx context.Context, req *UserRegisterRequest) (*UserR
 func (s *V1) UserUpdate(ctx context.Context, req *UserUpdateRequest) (*UserUpdateResponse, error) {
 	newUser := domain.NewUser(req.NewUser.Username, req.NewUser.Password)
 	oldUser := domain.NewUser(req.OldUser.Username, req.OldUser.Password)
-	log.Println(1)
 	if err := s.userService.Update(newUser, oldUser); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
@@ -84,22 +83,83 @@ func (s *V1) UserUpdate(ctx context.Context, req *UserUpdateRequest) (*UserUpdat
 				continue
 			}
 			log.Println(oldResult)
-			newResult := domain.NewResult(tp, md, oldResult.Scores, newUser.Username, oldResult.Lvl)
+			newResult := domain.NewResult(oldResult.Scores, newUser.Username, oldResult.Lvl)
 			log.Println(newResult)
-			s.resultsService.Update(newResult, oldResult)
+			s.resultsService.Update(tp, md, newResult, oldResult)
 		}
 	}
 	return &UserUpdateResponse{Token: token.ToString()}, nil
 }
 
-func (s *V1) SaveResult(ctx context.Context, req *ResultSaveRequest) (*ResultSaveResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SaveResult not implemented")
+func (s *V1) ResultSave(ctx context.Context, req *ResultSaveRequest) (*ResultSaveResponse, error) {
+	oldRes, _ := s.resultsService.Get(req.GameType, req.GameMode, req.Result.Username)
+	if oldRes != nil {
+		newRes := domain.NewResult(req.Result.Scores, req.Result.Username, int(req.Result.Lvl))
+		err := s.resultsService.Update(req.GameType, req.GameMode, newRes, oldRes)
+		if err != nil {
+			return nil, status.Error(status.Code(err), err.Error())
+		}
+		result, err := s.resultsService.Get(req.GameType, req.GameMode, req.Result.Username)
+		if err != nil {
+			return nil, status.Error(status.Code(err), err.Error())
+		}
+		return &ResultSaveResponse{
+			Position: int64(result.Position),
+			Result: &Result{
+				Scores:   result.Scores,
+				Username: result.Username,
+				Lvl:      int64(result.Lvl),
+			},
+		}, nil
+	}
+	result, err := s.resultsService.Create(req.GameType, req.GameMode, req.Result.Scores, req.Result.Username, int(req.Result.Lvl))
+	if err != nil {
+		return nil, status.Error(status.Code(err), err.Error())
+	}
+	return &ResultSaveResponse{
+		Position: int64(result.Position),
+		Result: &Result{
+			Scores:   result.Scores,
+			Username: result.Username,
+			Lvl:      int64(result.Lvl),
+		},
+	}, nil
 }
 
-func (s *V1) GetResult(ctx context.Context, req *ResultSaveRequest) (*ResultGetResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetResult not implemented")
+func (s *V1) ResultGet(ctx context.Context, req *ResultGetRequest) (*ResultGetResponse, error) {
+	result, err := s.resultsService.Get(req.GameType, req.GameMode, req.Username)
+	if err != nil {
+		return nil, status.Error(status.Code(err), err.Error())
+	}
+	return &ResultGetResponse{
+		Position: int64(result.Position),
+		Result: &Result{
+			Scores:   result.Scores,
+			Username: result.Username,
+			Lvl:      int64(result.Lvl),
+		},
+	}, nil
 }
 
-func (s *V1) GetResults(req *ResultsGetRequest, resp V1_ResultsGetServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetResults not implemented")
+func (s *V1) ResultsGet(req *ResultsGetRequest, resp V1_ResultsGetServer) error {
+	results, err := s.resultsService.GetRange(req.GameType, req.GameMode, int(req.Start), int(req.Count))
+	if err != nil {
+		return status.Error(status.Code(err), err.Error())
+	}
+	for _, result := range results {
+		err = resp.Send(
+			&ResultsGetResponse{
+				Position: int64(result.Position),
+				Result: &Result{
+					Scores:   result.Scores,
+					Username: result.Username,
+					Lvl:      int64(result.Lvl),
+				},
+			},
+		)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
