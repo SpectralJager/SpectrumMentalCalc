@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smct/core/constants/constants.dart';
 import 'package:smct/features/game/domain/usecase/game_usecase.dart';
-import 'package:smct/features/game/features/bloc/game_bloc.dart';
-import 'package:smct/features/game/features/widgets/game_body.dart';
-import 'package:smct/features/game/features/widgets/game_nubpad.dart';
+import 'package:smct/features/game/presentation/bloc/game_bloc.dart';
+import 'package:smct/features/game/presentation/widgets/game_body.dart';
+import 'package:smct/features/game/presentation/widgets/game_nubpad.dart';
 
 import 'complete_view.dart';
 import 'game_header.dart';

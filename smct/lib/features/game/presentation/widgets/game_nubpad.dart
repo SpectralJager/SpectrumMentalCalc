@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smct/features/game/features/bloc/game_bloc.dart';
+import 'package:smct/features/game/presentation/bloc/game_bloc.dart';
 
 class NumPad extends StatelessWidget {
   NumPad({Key? key}) : super(key: key);

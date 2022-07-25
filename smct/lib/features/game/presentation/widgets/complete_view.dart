@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smct/features/game/domain/entity/game_entity.dart';
-import 'package:smct/features/game/features/bloc/game_bloc.dart';
+import 'package:smct/features/game/presentation/bloc/game_bloc.dart';
 
 class GameCompliteView extends StatelessWidget {
   const GameCompliteView({Key? key}) : super(key: key);

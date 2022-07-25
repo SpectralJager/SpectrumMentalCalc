@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smct/core/constants/constants.dart';
-import 'package:smct/features/game/features/bloc/game_bloc.dart';
+import 'package:smct/features/game/presentation/bloc/game_bloc.dart';
 
 class GameBody extends StatelessWidget {
   GameBody({Key? key}) : super(key: key);
